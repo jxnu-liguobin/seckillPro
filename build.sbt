@@ -12,5 +12,8 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-simple" % "1.7.+",
   "mysql" % "mysql-connector-java" % "5.1.46",
   "com.typesafe" % "config" % "1.3.4",
-  "com.zaxxer" % "HikariCP" % "3.1.0"
+  "com.zaxxer" % "HikariCP" % "3.1.0",
+  "commons-codec" % "commons-codec" % "1.10",
+  "org.apache.commons" % "commons-lang3" % "3.7",
+  "com.alibaba" % "fastjson" % "1.2.56"
 )
