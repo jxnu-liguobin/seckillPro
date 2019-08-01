@@ -25,7 +25,7 @@ class ValidatorUtilScala {
   }
 }
 
-object ValidatorUtil {
+object ValidatorUtilScala {
 
   def main(args: Array[String]): Unit = {
     println(new ValidatorUtilScala().isMobile("18912341234"))

@@ -10,4 +10,5 @@ import java.time.LocalDateTime
  * @version v2.0
  */
 case class OrderInfo(id: Long, userId: Long, goodsId: Long, deliveryAddrId: Long, goodsName: String, goodsCount: Int,
-                     goodsPrice: Double, orderChannel: Int, status: Int, createDate: LocalDateTime, payDate: LocalDateTime)
+                     goodsPrice: Double, orderChannel: Int, status: Int, createDate: LocalDateTime = LocalDateTime.now(),
+                     payDate: LocalDateTime = LocalDateTime.now())
