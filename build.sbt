@@ -3,3 +3,14 @@ name := "seckillPro"
 version := "0.1"
 
 scalaVersion := "2.12.8"
+
+libraryDependencies ++= Seq(
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
+  "org.scalikejdbc" %% "scalikejdbc-async" % "0.12.+",
+  "org.scalikejdbc" %% "scalikejdbc" % "3.3.+",
+  "com.github.jasync-sql" % "jasync-mysql" % "1.0.+",
+  "org.slf4j" % "slf4j-simple" % "1.7.+",
+  "mysql" % "mysql-connector-java" % "5.1.46",
+  "com.typesafe" % "config" % "1.3.4",
+  "com.zaxxer" % "HikariCP" % "3.1.0"
+)
