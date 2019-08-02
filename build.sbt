@@ -15,5 +15,7 @@ libraryDependencies ++= Seq(
   "com.zaxxer" % "HikariCP" % "3.1.0",
   "commons-codec" % "commons-codec" % "1.10",
   "org.apache.commons" % "commons-lang3" % "3.7",
-  "com.alibaba" % "fastjson" % "1.2.56"
+  "com.alibaba" % "fastjson" % "1.2.56",
+  "redis.clients" % "jedis" % "2.9.0",
+  "com.google.inject" % "guice" % "4.2.2"
 )

@@ -5,8 +5,7 @@ import java.util.Properties
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.LazyLogging
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
-import scalikejdbc.{ConnectionPool, DB, DBSession}
-import scalikejdbc._
+import scalikejdbc.{ConnectionPool, DB, DBSession, _}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

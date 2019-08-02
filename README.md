@@ -4,11 +4,12 @@ a  support asynchronous seckillPro implemented by Java and  Scala but don't hava
 The following skills may be used
 
 * scala
-* java
 * undertow
 * mysql
 * scalikejdbc
 * disruptor
+* redis
+* akka
 
 [scala seckill v1.0](https://github.com/jxnu-liguobin/SpringBoot-SecKill-Scala)
 

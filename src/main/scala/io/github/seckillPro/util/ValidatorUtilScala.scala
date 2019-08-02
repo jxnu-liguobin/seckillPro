@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils
  * @time 2019年8月1日
  * @version v2.0
  */
-class ValidatorUtilScala {
+object ValidatorUtilScala {
 
   private final val mobile_pattern: Pattern =
     Pattern.compile("^((17[0-9])|(14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$")
@@ -23,14 +23,7 @@ class ValidatorUtilScala {
       false
     } else mobile_pattern.matcher(src).matches()
   }
+
+  println(ValidatorUtilScala.isMobile("18912341234"))
+  println(ValidatorUtilScala.isMobile("1891234123"))
 }
-
-object ValidatorUtilScala {
-
-  def main(args: Array[String]): Unit = {
-    println(new ValidatorUtilScala().isMobile("18912341234"))
-    println(new ValidatorUtilScala().isMobile("1891234123"))
-  }
-
-}
-

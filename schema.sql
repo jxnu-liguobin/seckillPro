@@ -42,8 +42,8 @@ CREATE TABLE `order_info`
     `goods_price`      decimal(10, 2) DEFAULT NULL,
     `order_channel`    int(255)       DEFAULT NULL,
     `status`           int(255)       DEFAULT NULL,
-    `create_date`      datetime       DEFAULT NULL,
-    `pay_date`         datetime       DEFAULT NULL,
+    `create_date`      bigint(64)     DEFAULT NULL,
+    `pay_date`         bigint(64)     DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 2
@@ -59,8 +59,8 @@ CREATE TABLE `seckill_goods`
     `id`            bigint(64) NOT NULL AUTO_INCREMENT,
     `goods_id`      bigint(64)     DEFAULT NULL,
     `stock_count`   int(64)        DEFAULT NULL,
-    `start_date`    datetime       DEFAULT NULL,
-    `end_date`      datetime       DEFAULT NULL,
+    `start_date`    bigint(64)     DEFAULT NULL,
+    `end_date`      bigint(64)     DEFAULT NULL,
     `seckill_price` decimal(10, 2) DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
@@ -93,13 +93,13 @@ CREATE TABLE `seckill_order`
 DROP TABLE IF EXISTS `seckill_user`;
 CREATE TABLE `seckill_user`
 (
-    `id`            bigint(20) NOT NULL,
+    `id`            bigint(64) NOT NULL,
     `nickname`      varchar(255) DEFAULT NULL,
     `password`      varchar(255) DEFAULT NULL,
     `salt`          varchar(255) DEFAULT NULL,
     `head`          varchar(255) DEFAULT NULL,
-    `registerDate`  datetime     DEFAULT NULL,
-    `lastLoginDate` datetime     DEFAULT NULL,
+    `registerDate`  bigint(64)   DEFAULT NULL,
+    `lastLoginDate` bigint(64)   DEFAULT NULL,
     `loginCount`    int(255)     DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
