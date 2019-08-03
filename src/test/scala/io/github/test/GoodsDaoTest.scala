@@ -1,23 +1,19 @@
 package io.github.test
 
 import io.github.seckillPro.dao.GoodsDao
-import io.github.seckillPro.db.DatabaseSupport
 import io.github.seckillPro.entity.SeckillGoods
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 /**
- * 目前不引入测试框架
- * 后期改用scalatest plus
+ * 商品测试
  *
  * @author 梦境迷离
  * @time 2019-08-02
  * @version v2.0
  */
-object GoodsDaoTest extends App {
-
-  DatabaseSupport.init()
+object GoodsDaoTest extends BaseTest with App {
 
   val id = 1
   val goodsId = 1

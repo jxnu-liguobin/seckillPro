@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 /**
  * 秒杀用户
  *
- * @author 梦境迷离.
+ * @author 梦境迷离
  * @time 2019年8月1日
  * @version v2.0
  */

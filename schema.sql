@@ -112,7 +112,7 @@ CREATE TABLE `seckill_user`
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
 (
-    `id`   int(32) NOT NULL AUTO_INCREMENT,
+    `id`   bigint(64) NOT NULL AUTO_INCREMENT,
     `name` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
