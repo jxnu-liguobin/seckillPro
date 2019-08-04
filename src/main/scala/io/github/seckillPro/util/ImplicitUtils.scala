@@ -2,7 +2,7 @@ package io.github.seckillPro.util
 
 import java.time.LocalDateTime
 
-import io.github.seckillPro.util.DateUtils.{localDateTimeToLong, localDateTimeToString, localDateTimeToStringNoMS, longToLocalDateTime}
+import io.github.seckillPro.util.DateUtils._
 
 /**
  * 隐式对象工具
