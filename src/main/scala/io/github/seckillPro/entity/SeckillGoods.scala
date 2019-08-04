@@ -10,4 +10,5 @@ import java.time.LocalDateTime
  * @version v2.0
  */
 case class SeckillGoods(id: Long, goodsId: Long, stockCount: Int, seckillPrice: Double,
-                        startDate: LocalDateTime = LocalDateTime.now(), endDate: LocalDateTime = LocalDateTime.now())
+                        startDate: Option[LocalDateTime] = Option(LocalDateTime.now()),
+                        endDate: Option[LocalDateTime] = Option(LocalDateTime.now()))

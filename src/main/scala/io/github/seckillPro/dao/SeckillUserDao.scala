@@ -28,7 +28,7 @@ trait SeckillUserDao extends CommonComponet {
             //使用表的列名更加清晰
             SeckillUser(user.long("id"), user.string("nickname"), user.string("password"),
               user.string("salt"), user.string("head"), user.int("loginCount"),
-              user.long("registerDate"), user.long("lastLoginDate"))
+              user.longOpt("registerDate"), user.longOpt("lastLoginDate"))
         }.single().apply()
     }
   }
@@ -40,7 +40,7 @@ trait SeckillUserDao extends CommonComponet {
     localTx {
       implicit s =>
         sql"""
-              update seckill_user set password = ${toBeUpdate.password} where id = #{toBeUpdate.id}
+              update seckill_user set password = ${toBeUpdate.password} where id = ${toBeUpdate.id}
           """.update().apply()
     }
   }

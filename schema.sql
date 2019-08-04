@@ -5,6 +5,7 @@
 -- source schema.sql
 -- source data.sql
 -- There is no limit on null, but in the code.
+-- time is ms
 
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -42,8 +43,8 @@ CREATE TABLE `order_info`
     `goods_price`      decimal(10, 2) DEFAULT NULL,
     `order_channel`    int(255)       DEFAULT NULL,
     `status`           int(255)       DEFAULT NULL,
-    `create_date`      bigint(64)     DEFAULT NULL,
-    `pay_date`         bigint(64)     DEFAULT NULL,
+    `create_date`      bigint         DEFAULT NULL,
+    `pay_date`         bigint         DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 2
@@ -59,8 +60,8 @@ CREATE TABLE `seckill_goods`
     `id`            bigint(64) NOT NULL AUTO_INCREMENT,
     `goods_id`      bigint(64)     DEFAULT NULL,
     `stock_count`   int(64)        DEFAULT NULL,
-    `start_date`    bigint(64)     DEFAULT NULL,
-    `end_date`      bigint(64)     DEFAULT NULL,
+    `start_date`    bigint         DEFAULT NULL,
+    `end_date`      bigint         DEFAULT NULL,
     `seckill_price` decimal(10, 2) DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
@@ -98,8 +99,8 @@ CREATE TABLE `seckill_user`
     `password`      varchar(255) DEFAULT NULL,
     `salt`          varchar(255) DEFAULT NULL,
     `head`          varchar(255) DEFAULT NULL,
-    `registerDate`  bigint(64)   DEFAULT NULL,
-    `lastLoginDate` bigint(64)   DEFAULT NULL,
+    `registerDate`  bigint       DEFAULT NULL,
+    `lastLoginDate` bigint       DEFAULT NULL,
     `loginCount`    int(255)     DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB

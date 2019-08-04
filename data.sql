@@ -26,4 +26,4 @@ VALUES ('15312345678', '鱼虾', 'b7797cce01b4b131b433b6acf4add449', '1a2b3c4d',
 -- Records of user
 -- ----------------------------
 INSERT INTO `user`
-VALUES ('1', '武侠');
+VALUES ('1', '测试');

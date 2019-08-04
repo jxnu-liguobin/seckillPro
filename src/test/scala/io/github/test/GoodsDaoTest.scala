@@ -1,5 +1,7 @@
 package io.github.test
 
+import java.time.LocalDateTime
+
 import io.github.seckillPro.dao.GoodsDao
 import io.github.seckillPro.entity.SeckillGoods
 
@@ -19,7 +21,7 @@ object GoodsDaoTest extends BaseTest with App {
   val goodsId = 1
   val stockCount = 2
   val price = 2
-  val seckillGoods = SeckillGoods(id, goodsId, stockCount, price)
+  val seckillGoods = SeckillGoods(id, goodsId, stockCount, price,Option( LocalDateTime.now()))
 
   val listGoodsVo = Await.result(GoodsDao.listGoodsVo(), Duration.Inf)
   listGoodsVo.foreach(x => println(x))

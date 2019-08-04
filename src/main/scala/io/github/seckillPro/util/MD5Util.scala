@@ -31,7 +31,6 @@ object MD5Util {
    */
   def inputPassToFormPass(inputPass: String): String = {
     val str = "" + salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4)
-    println(str)
     md5(str)
   }
 

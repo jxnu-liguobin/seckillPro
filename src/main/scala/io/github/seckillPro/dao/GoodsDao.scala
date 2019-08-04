@@ -29,8 +29,8 @@ trait GoodsDao extends CommonComponet {
             goods.string(4), goods.string(5), goods.string(6), goods.string(7))
           GoodsVo(g, goods.double(8),
             goods.int(9),
-            goods.long(10),
-            goods.long(11)
+            goods.longOpt(10),
+            goods.longOpt(11)
           )
       }.list().apply()
     }
@@ -52,12 +52,11 @@ trait GoodsDao extends CommonComponet {
               goods.string(4), goods.string(5), goods.string(6), goods.string(7))
             GoodsVo(g, goods.double(8),
               goods.int(9),
-              goods.long(10),
-              goods.long(11)
+              goods.longOpt(10),
+              goods.longOpt(11)
             )
         }.single().apply()
     }
-
   }
 
   /**
