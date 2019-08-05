@@ -1,5 +1,6 @@
-package io.github.test
+package io.github.dao.test
 
+import io.github.BaseTest
 import io.github.seckillPro.dao.SeckillUserDao
 import io.github.seckillPro.entity.SeckillUser
 import io.github.seckillPro.util.MD5Util

@@ -2,9 +2,10 @@ package io.github.seckillPro.db
 
 import java.util.Properties
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
+import io.github.seckillPro.config.ConfigLoader
 import scalikejdbc.{ConnectionPool, DB, DBSession, _}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -41,7 +42,7 @@ trait DatabaseSupport {
  */
 object DatabaseSupport extends LazyLogging {
 
-  val defaultConfig = ConfigFactory.load("application.conf")
+  val defaultConfig = ConfigLoader.defaultConfig
 
   def init(config: Config = defaultConfig): Unit = {
     logger.info("Init connection pool from config scalike")

@@ -1,4 +1,4 @@
-package io.github.test
+package io.github
 
 import io.github.seckillPro.db.DatabaseSupport
 

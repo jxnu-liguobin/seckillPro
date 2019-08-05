@@ -1,4 +1,4 @@
-package io.github.test
+package io.github.dao.test
 
 import io.github.seckillPro.db.DatabaseSupport
 import scalikejdbc._
