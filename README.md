@@ -1,4 +1,5 @@
-# seckillPro
+Seckill Pro
+---
 
 [![Build Status](https://travis-ci.org/jxnu-liguobin/seckillPro.svg?branch=master)](https://travis-ci.org/jxnu-liguobin/seckillPro)
 ![GitHub](https://img.shields.io/github/license/jxnu-liguobin/seckillPro.svg)
@@ -6,7 +7,8 @@
 
 a seckill project  which support asynchronous implemented by Java and  Scala but don't hava any pages
 
-The following skills may be used
+Skills
+---
 
 * scala
 * undertow
@@ -17,6 +19,8 @@ The following skills may be used
 * akka
 
 
+Others Version
+---
 [Scala V1.0](https://github.com/jxnu-liguobin/SpringBoot-SecKill-Scala)
 
 [Java  V1.0](https://github.com/jxnu-liguobin/SpringBoot-SecKill-Scala/tree/seckill)
