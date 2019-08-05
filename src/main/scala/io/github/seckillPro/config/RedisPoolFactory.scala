@@ -11,13 +11,16 @@ import redis.clients.jedis.{JedisPool, JedisPoolConfig}
  */
 object RedisPoolFactory {
 
+  /**
+   * 没有密码
+   */
   def JedisPoolFactory(): JedisPool = {
     val poolConfig = new JedisPoolConfig()
     poolConfig.setMaxIdle(RedisConfig.getRedisConfig.poolMaxIdle)
     poolConfig.setMaxTotal(RedisConfig.getRedisConfig.poolMaxTotal)
     poolConfig.setMaxWaitMillis(RedisConfig.getRedisConfig.poolMaxWait * 1000)
     new JedisPool(poolConfig, RedisConfig.getRedisConfig.host, RedisConfig.getRedisConfig.port,
-      RedisConfig.getRedisConfig.timeout * 1000, RedisConfig.getRedisConfig.password, 0)
+      RedisConfig.getRedisConfig.timeout * 1000)
 
   }
 }

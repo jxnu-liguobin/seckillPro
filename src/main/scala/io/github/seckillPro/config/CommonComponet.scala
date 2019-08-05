@@ -1,7 +1,8 @@
-package io.github.seckillPro.util
+package io.github.seckillPro.config
 
 import com.typesafe.scalalogging.LazyLogging
 import io.github.seckillPro.db.DatabaseSupport
+import io.github.seckillPro.util.ImplicitUtils
 
 /**
  * 通用组件接口

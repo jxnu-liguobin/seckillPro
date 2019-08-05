@@ -7,7 +7,7 @@ package io.github.seckillPro.config
  * @time 2019-08-05
  * @version v2.0
  */
-private case class RedisConfig(host: String, port: Int, timeout: Int, password: String, poolMaxTotal: Int, poolMaxIdle: Int, poolMaxWait: Int)
+case class RedisConfig(host: String, port: Int, timeout: Int, password: String, poolMaxTotal: Int, poolMaxIdle: Int, poolMaxWait: Int)
 
 object RedisConfig {
 
@@ -18,7 +18,7 @@ object RedisConfig {
     ConfigLoader.getStringValue("redis.password"),
     ConfigLoader.getIntValue("redis.poolMaxTotal"),
     ConfigLoader.getIntValue("redis.poolMaxIdle"),
-    ConfigLoader.getIntValue("redis.poolMaxWait"),
+    ConfigLoader.getIntValue("redis.poolMaxWait")
   )
 
 }

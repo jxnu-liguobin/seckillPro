@@ -2,6 +2,9 @@ package io.github.seckillPro.entity
 
 import java.time.LocalDateTime
 
+import io.github.seckillPro.util.ImplicitUtils
+import play.api.libs.json.{Json, Writes}
+
 /**
  * 秒杀商品
  *
@@ -12,3 +15,15 @@ import java.time.LocalDateTime
 case class SeckillGoods(id: Long, goodsId: Long, stockCount: Int, seckillPrice: Double,
                         startDate: Option[LocalDateTime] = Option(LocalDateTime.now()),
                         endDate: Option[LocalDateTime] = Option(LocalDateTime.now()))
+
+object SeckillGoods {
+
+  implicit val writer: Writes[SeckillGoods] = (s: SeckillGoods) => Json.obj(
+    "id" -> s.id,
+    "goodsId" -> s.goodsId,
+    "stockCount" -> s.stockCount,
+    "seckillPrice" -> s.seckillPrice,
+    "startDate" -> ImplicitUtils.toStr(s.startDate),
+    "endDate" -> ImplicitUtils.toStr(s.endDate),
+  )
+}

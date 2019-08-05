@@ -3,6 +3,7 @@ package io.github.seckillPro.entity
 import java.time.LocalDateTime
 
 import io.github.seckillPro.util.ImplicitUtils
+import play.api.libs.json.{Json, Writes}
 
 /**
  * 订单信息
@@ -15,11 +16,22 @@ import io.github.seckillPro.util.ImplicitUtils
  */
 case class OrderInfo(id: Long, userId: Long, goodsId: Long, deliveryAddrId: Option[Long], goodsName: String, goodsCount: Int,
                      goodsPrice: Double, orderChannel: Int, status: Int, createDate: Option[LocalDateTime] = Option(LocalDateTime.now()),
-                     payDate: Option[LocalDateTime] = None) {
+                     payDate: Option[LocalDateTime] = None)
 
-  override def toString: String = {
-    s"OrderInfo:[id:[$id],userId:[$userId],goodsId:[$goodsId],deliveryAddrId:[$deliveryAddrId],goodsName:[$goodsName]," +
-      s"goodsCount:[$goodsCount],goodsPrice:[$goodsPrice],orderChannel:[$orderChannel],status:[$status]," +
-      s"createDate:[${ImplicitUtils.toStr(createDate)}],payDate:[${ImplicitUtils.toStr(payDate)}]]"
-  }
+
+object OrderInfo {
+
+  implicit val writer: Writes[OrderInfo] = (o: OrderInfo) => Json.obj(
+    "id" -> o.id,
+    "userId" -> o.userId,
+    "goodsId" -> o.goodsId,
+    "deliveryAddrId" -> o.deliveryAddrId,
+    "goodsName" -> o.goodsName,
+    "goodsCount" -> o.goodsCount,
+    "goodsPrice" -> o.goodsPrice,
+    "orderChannel" -> o.orderChannel,
+    "status" -> o.status,
+    "createDate" -> ImplicitUtils.toStr(o.createDate),
+    "payDate" -> ImplicitUtils.toStr(o.payDate),
+  )
 }

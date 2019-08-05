@@ -3,6 +3,7 @@ package io.github.seckillPro.entity
 import java.time.LocalDateTime
 
 import io.github.seckillPro.util.ImplicitUtils
+import play.api.libs.json.{Json, Writes}
 
 /**
  * 秒杀用户
@@ -13,9 +14,18 @@ import io.github.seckillPro.util.ImplicitUtils
  */
 case class SeckillUser(id: Long, nickname: String, password: String, salt: String, head: String,
                        loginCount: Int, registerDate: Option[LocalDateTime] = Option(LocalDateTime.now()),
-                       lastLoginDate: Option[LocalDateTime] = Option(LocalDateTime.now())) {
-  override def toString: String = {
-    s"SeckillUser:[id:[$id],nickname:[$nickname],password:[$password],salt:[$salt],head:[$head],loginCount:[$loginCount]," +
-      s"registerDate:[${ImplicitUtils.toStr(registerDate)}],lastLoginDate:[${ImplicitUtils.toStr(lastLoginDate)}]]"
-  }
+                       lastLoginDate: Option[LocalDateTime] = Option(LocalDateTime.now()))
+
+object SeckillUser {
+
+  implicit val writer: Writes[SeckillUser] = (s: SeckillUser) => Json.obj(
+    "id" -> s.id,
+    "nickname" -> s.nickname,
+    "password" -> s.password,
+    "salt" -> s.salt,
+    "head" -> s.head,
+    "loginCount" -> s.loginCount,
+    "registerDate" -> ImplicitUtils.toStr(s.registerDate),
+    "lastLoginDate" -> ImplicitUtils.toStr(s.lastLoginDate),
+  )
 }

@@ -1,7 +1,7 @@
 package io.github.seckillPro.dao
 
+import io.github.seckillPro.config.CommonComponet
 import io.github.seckillPro.entity.User
-import io.github.seckillPro.util.CommonComponet
 import scalikejdbc._
 
 import scala.concurrent.Future

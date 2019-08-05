@@ -2,7 +2,8 @@ package io.github.seckillPro.redis
 
 import java.util
 
-import com.alibaba.fastjson.JSON
+import com.google.gson.GsonBuilder
+import com.typesafe.scalalogging.LazyLogging
 import io.github.seckillPro.config.RedisPoolFactory
 import io.github.seckillPro.util.{ResourceUtils, VerifyEmpty}
 import redis.clients.jedis.{Jedis, ScanParams, ScanResult}
@@ -16,9 +17,10 @@ import scala.collection.mutable.ArrayBuffer
  * @time 2019-08-05
  * @version v2.0
  */
-object RedisService {
+object RedisService extends LazyLogging {
 
   final lazy private val jedisPool = RedisPoolFactory.JedisPoolFactory()
+  final lazy private val gs = new GsonBuilder().serializeNulls().create()
 
   def get[T](prefix: KeyPrefix, key: String, clazz: Class[T]): T = {
     try {
@@ -26,6 +28,7 @@ object RedisService {
         // 生成真正的key
         val realKey = prefix.getPrefix() + key
         val str = jedis.get(realKey)
+        logger.info(s"get real key:$realKey")
         RedisService.stringToBean(str, clazz)
       }
     }
@@ -41,6 +44,7 @@ object RedisService {
       val realKey = prefix.getPrefix() + key
       val seconds = prefix.expireSeconds()
       ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
+        logger.info(s"set real key:$realKey")
         if (seconds <= 0)
           jedis.set(realKey, str)
         else
@@ -57,6 +61,7 @@ object RedisService {
     ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
       // 生成真正的key
       val realKey = prefix.getPrefix() + key
+      logger.info(s"exists real key:$realKey")
       jedis.exists(realKey)
     }
   }
@@ -68,6 +73,7 @@ object RedisService {
     ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
       // 生成真正的key
       val realKey = prefix.getPrefix() + key
+      logger.info(s"incr real key:$realKey")
       jedis.incr(realKey)
     }
   }
@@ -79,6 +85,7 @@ object RedisService {
     ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
       // 生成真正的key
       val realKey = prefix.getPrefix() + key
+      logger.info(s"decr real key:$realKey")
       jedis.decr(realKey)
     }
   }
@@ -90,6 +97,7 @@ object RedisService {
     ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
       // 生成真正的key
       val realKey = prefix.getPrefix() + key
+      logger.info(s"delete real key:$realKey")
       jedis.del(realKey) > 0
     }
   }
@@ -109,6 +117,7 @@ object RedisService {
     } else {
       ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
         jedis.del(keyss: _*)
+        logger.info(s"delete key prefix:$prefix")
         true
       }
     }
@@ -117,7 +126,7 @@ object RedisService {
   /**
    * 去除前100 key
    */
-  def scanKeys(key: String): util.List[String] = {
+  private def scanKeys(key: String): util.List[String] = {
     ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
       val keys = new util.ArrayList[String]()
       var cursor = "0"
@@ -151,8 +160,7 @@ object RedisService {
       } else if (clazz == classOf[Long] || clazz == classOf[Long]) {
         "" + value
       } else {
-        //TODO 对齐的JSON，必须加true/false,否则有二义性，与Java不同
-        JSON.toJSONString(value, false)
+        gs.toJson(value)
       }
     }
   }
@@ -174,7 +182,7 @@ object RedisService {
     } else if (clazz == classOf[Long] || clazz == classOf[Long]) {
       str.toLong.asInstanceOf[T]
     } else {
-      JSON.toJavaObject(JSON.parseObject(str), clazz)
+      gs.fromJson(str, clazz)
     }
   }
 }

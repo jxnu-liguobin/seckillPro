@@ -1,8 +1,8 @@
 package io.github.seckillPro.dao
 
+import io.github.seckillPro.config.CommonComponet
 import io.github.seckillPro.entity.{Goods, SeckillGoods}
 import io.github.seckillPro.presenter.GoodsVo
-import io.github.seckillPro.util.CommonComponet
 import scalikejdbc._
 
 import scala.concurrent.Future

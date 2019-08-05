@@ -7,4 +7,9 @@ package io.github.seckillPro.entity
  * @time 2019年8月1日
  * @version v2.0
  */
-case class User(id: Long, name: String)
+case class User(id: Long, name: String) {
+  //Gson需要无参构造
+  def this() {
+    this(0, "")
+  }
+}

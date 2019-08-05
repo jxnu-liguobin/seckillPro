@@ -17,5 +17,7 @@ libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-lang3" % "3.7",
   "com.alibaba" % "fastjson" % "1.2.56",
   "redis.clients" % "jedis" % "2.9.0",
-  "com.google.inject" % "guice" % "4.2.2"
+  "com.google.inject" % "guice" % "4.2.2",
+  "com.typesafe.play" %% "play-json" % "2.7.0",
+  "com.google.code.gson" % "gson" % "2.8.5"
 )
