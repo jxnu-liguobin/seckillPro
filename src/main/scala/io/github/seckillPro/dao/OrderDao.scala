@@ -24,8 +24,8 @@ trait OrderDao extends CommonComponet {
         sql"""
               select * from seckill_order where user_id=${userId} and goods_id=${goodsId}
           """.map { so =>
-          SeckillOrder(so.long("id"), so.long("user_id"),
-            so.long("order_id"), so.long("goods_id"))
+          SeckillOrder(so.longOpt("id"), so.longOpt("user_id"),
+            so.longOpt("order_id"), so.longOpt("goods_id"))
         }.single().apply()
     }
   }
@@ -69,7 +69,7 @@ trait OrderDao extends CommonComponet {
           o =>
             val c = toLocalDateTime(o.longOpt("create_date"))
             val p = toLocalDateTime(o.longOpt("pay_date"))
-            val order = OrderInfo(o.long("id"), o.long("user_id"), o.long("goods_id"),
+            val order = OrderInfo(o.longOpt("id"), o.longOpt("user_id"), o.longOpt("goods_id"),
               o.longOpt("delivery_addr_id"), o.string("goods_name"), o.int("goods_count"),
               o.double("goods_price"), o.int("order_channel"), o.int("status"),
               c, p)

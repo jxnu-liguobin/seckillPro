@@ -13,6 +13,7 @@ import io.github.seckillPro.redis.key.SeckillKey
  */
 object RedisServiceTest extends BaseTest with App {
 
+  //不能序列化Scala的Option类型
   val use = RedisService.beanToString(User(1, "sss"))
   println(use)
 

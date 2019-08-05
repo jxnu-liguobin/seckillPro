@@ -32,7 +32,7 @@ trait GoodsService {
    * 默认每次减1
    */
   def reduceStock(goods: GoodsVo) = {
-    val g = SeckillGoods(id = -1, goodsId = goods.goods.id, stockCount = goods.stockCount
+    val g = SeckillGoods(None, goodsId = goods.goods.id, stockCount = goods.stockCount
       , seckillPrice = goods.seckillPrice)
     GoodsDao.reduceStock(g).map(x => x)
   }
@@ -42,7 +42,7 @@ trait GoodsService {
    */
   def resetStock(goodsList: Seq[GoodsVo]) = {
     for (goods <- goodsList) {
-      val g = SeckillGoods(id = -1, goodsId = goods.goods.id, stockCount = goods.stockCount, seckillPrice = goods.seckillPrice)
+      val g = SeckillGoods(None, goodsId = goods.goods.id, stockCount = goods.stockCount, seckillPrice = goods.seckillPrice)
       GoodsDao.resetStock(g).map(x => x)
     }
     Future.successful(0)

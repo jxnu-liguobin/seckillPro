@@ -12,7 +12,7 @@ import play.api.libs.json.{Json, Writes}
  * @time 2019年8月1日
  * @version v2.0
  */
-case class SeckillGoods(id: Long, goodsId: Long, stockCount: Int, seckillPrice: Double,
+case class SeckillGoods(id: Option[Long], goodsId: Option[Long], stockCount: Int, seckillPrice: Double,
                         startDate: Option[LocalDateTime] = Option(LocalDateTime.now()),
                         endDate: Option[LocalDateTime] = Option(LocalDateTime.now()))
 

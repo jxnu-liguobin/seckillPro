@@ -7,4 +7,4 @@ package io.github.seckillPro.entity
  * @time 2019年8月1日
  * @version v2.0
  */
-case class SeckillOrder(id: Long, userId: Long, orderId: Long, goodsId: Long)
+case class SeckillOrder(id: Option[Long], userId: Option[Long], orderId: Option[Long], goodsId: Option[Long])

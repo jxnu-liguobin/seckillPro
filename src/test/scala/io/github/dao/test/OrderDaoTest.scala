@@ -16,11 +16,11 @@ import scala.concurrent.duration.Duration
 object OrderDaoTest extends BaseTest with App {
 
   println("===================insert======================")
-  val insertRes = Await.result(OrderDao.insert(OrderInfo(1, 1, 1, Option(1), "goodsName", 11, 1.02, 1, 2)), Duration.Inf)
+  val insertRes = Await.result(OrderDao.insert(OrderInfo(None, Option(1), Option(1), Option(1), "goodsName", 11, 1.02, 1, 2)), Duration.Inf)
   println("id => " + insertRes)
 
   println("===================insertSeckillOrder======================")
-  val insertSeckillOrderRes = Await.result(OrderDao.insertSeckillOrder(SeckillOrder(1, 1, 1, 1)), Duration.Inf)
+  val insertSeckillOrderRes = Await.result(OrderDao.insertSeckillOrder(SeckillOrder(None, Option(1), Option(1), Option(1))), Duration.Inf)
   println(insertSeckillOrderRes)
 
   println("===================getSeckillOrderByUserIdGoodsId======================")

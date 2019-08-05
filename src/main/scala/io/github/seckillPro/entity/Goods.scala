@@ -7,5 +7,5 @@ package io.github.seckillPro.entity
  * @time 2019年8月1日
  * @version v2.0
  */
-case class Goods(id: Long, goodsName: String, goodsTitle: String, goodsImg: String, goodsDetail: String,
-                 goodsPrice: String, goodsStock: String)
+case class Goods(id: Option[Long], goodsName: String, goodsTitle: String, goodsImg: String, goodsDetail: String,
+                 goodsPrice: Double, goodsStock: Int)

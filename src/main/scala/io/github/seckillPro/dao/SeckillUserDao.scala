@@ -26,7 +26,7 @@ trait SeckillUserDao extends CommonComponet {
           """.map {
           user =>
             //使用表的列名更加清晰
-            SeckillUser(user.long("id"), user.string("nickname"), user.string("password"),
+            SeckillUser(user.longOpt("id"), user.string("nickname"), user.string("password"),
               user.string("salt"), user.string("head"), user.int("loginCount"),
               user.longOpt("registerDate"), user.longOpt("lastLoginDate"))
         }.single().apply()

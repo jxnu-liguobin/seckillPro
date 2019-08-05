@@ -27,7 +27,7 @@ object UserUtil {
     val users = Seq[SeckillUser]()
     // 生成用户
     for (i <- 0 until count) {
-      val user = SeckillUser(13000000000L + i, "user" + i,
+      val user = SeckillUser(Option(13000000000L + i), "user" + i,
         MD5Util.inputPassToDbPass("123456", "1a2b3c"), "1a2b3c", "", 1)
       users.:+(user)
     }

@@ -19,10 +19,10 @@ import scala.concurrent.duration.Duration
 object GoodsDaoTest extends BaseTest with App {
 
   val id = 1
-  val goodsId = 1
+  val goodsId = Some(1L)
   val stockCount = 2
   val price = 2
-  val seckillGoods = SeckillGoods(id, goodsId, stockCount, price,Option( LocalDateTime.now()))
+  val seckillGoods = SeckillGoods(None, goodsId, stockCount, price, Option(LocalDateTime.now()))
 
   val listGoodsVo = Await.result(GoodsDao.listGoodsVo(), Duration.Inf)
   listGoodsVo.foreach(x => println(x))

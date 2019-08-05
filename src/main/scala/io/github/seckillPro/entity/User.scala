@@ -10,6 +10,6 @@ package io.github.seckillPro.entity
 case class User(id: Long, name: String) {
   //Gson需要无参构造
   def this() {
-    this(0, "")
+    this(1, "")
   }
 }

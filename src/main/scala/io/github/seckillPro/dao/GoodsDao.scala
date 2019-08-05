@@ -25,8 +25,8 @@ trait GoodsDao extends CommonComponet {
           select g.*,mg.seckill_price,mg.stock_count, mg.start_date, mg.end_date from seckill_goods mg left join goods g on mg.goods_id = g.id
       """.map {
         goods =>
-          val g = Goods(goods.long(1), goods.string(2), goods.string(3),
-            goods.string(4), goods.string(5), goods.string(6), goods.string(7))
+          val g = Goods(Some(goods.long(1)), goods.string(2), goods.string(3),
+            goods.string(4), goods.string(5), goods.double(6), goods.int(7))
           GoodsVo(g, goods.double(8),
             goods.int(9),
             goods.longOpt(10),
@@ -48,8 +48,8 @@ trait GoodsDao extends CommonComponet {
               left join goods g on mg.goods_id = g.id where g.id = ${goodsId}
           """.map {
           goods =>
-            val g = Goods(goods.long(1), goods.string(2), goods.string(3),
-              goods.string(4), goods.string(5), goods.string(6), goods.string(7))
+            val g = Goods(goods.longOpt(1), goods.string(2), goods.string(3),
+              goods.string(4), goods.string(5), goods.double(6), goods.int(7))
             GoodsVo(g, goods.double(8),
               goods.int(9),
               goods.longOpt(10),

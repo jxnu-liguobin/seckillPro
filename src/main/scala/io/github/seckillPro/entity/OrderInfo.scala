@@ -14,7 +14,7 @@ import play.api.libs.json.{Json, Writes}
  * @time 2019年8月1日
  * @version v2.0
  */
-case class OrderInfo(id: Long, userId: Long, goodsId: Long, deliveryAddrId: Option[Long], goodsName: String, goodsCount: Int,
+case class OrderInfo(id: Option[Long], userId: Option[Long], goodsId: Option[Long], deliveryAddrId: Option[Long], goodsName: String, goodsCount: Int,
                      goodsPrice: Double, orderChannel: Int, status: Int, createDate: Option[LocalDateTime] = Option(LocalDateTime.now()),
                      payDate: Option[LocalDateTime] = None)
 
