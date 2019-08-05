@@ -6,8 +6,7 @@ import com.typesafe.scalalogging.LazyLogging
 import io.github.seckillPro.dao.OrderDao
 import io.github.seckillPro.db.DatabaseSupport
 import io.github.seckillPro.entity.{OrderInfo, SeckillOrder, SeckillUser}
-import io.github.seckillPro.exception.GlobalException
-import io.github.seckillPro.presenter.{CodeMsg, GoodsVo}
+import io.github.seckillPro.presenter.GoodsVo
 import io.github.seckillPro.redis.RedisService
 import io.github.seckillPro.redis.key.OrderKey
 
@@ -47,7 +46,6 @@ trait OrderService extends LazyLogging {
       //    生成订单的时候写完mysql,也要写进redis中,下次点击将直接去缓存，响应快
       RedisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.id.getOrElse(-1) + "_" + goodsVo.goods.id, seckillOrder)
       orderInfo.copy(id = Some(id))
-      throw GlobalException(CodeMsg.SECKILL_FAIL)
     }).recover {
       case e: Exception =>
         logger.warn(s"Seckill failed when create order by: ${e.getMessage}, then rollback")

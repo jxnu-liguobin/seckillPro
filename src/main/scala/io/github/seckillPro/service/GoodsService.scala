@@ -1,5 +1,6 @@
 package io.github.seckillPro.service
 
+import com.typesafe.scalalogging.LazyLogging
 import io.github.seckillPro.dao.GoodsDao
 import io.github.seckillPro.entity.SeckillGoods
 import io.github.seckillPro.presenter.GoodsVo
@@ -14,7 +15,7 @@ import scala.concurrent.Future
  * @time 2019-08-05
  * @version v2.0
  */
-trait GoodsService {
+trait GoodsService extends LazyLogging {
 
   /**
    * 查询全部
