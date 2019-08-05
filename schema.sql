@@ -84,6 +84,9 @@ CREATE TABLE `seckill_order`
   AUTO_INCREMENT = 2
   DEFAULT CHARSET = utf8;
 
+ALTER TABLE `seckill_order`
+    ADD UNIQUE (`user_id`, `goods_id`);
+
 -- ----------------------------
 -- Records of seckill_order
 -- ----------------------------

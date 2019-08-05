@@ -20,20 +20,18 @@ import scala.concurrent.Future
  */
 trait DatabaseSupport {
 
+  import DatabaseSupport._
+
   def readOnly[A](execution: DBSession ⇒ A): Future[A] = concurrent.Future {
-    using(DB(getConnectionPool.borrow())) { db =>
-      db.readOnly(session => execution(session))
+    using(getDB) { db: DB =>
+      db.readOnly((session: DBSession) => execution(session))
     }
   }
 
   def localTx[A](execution: DBSession ⇒ A): Future[A] = concurrent.Future {
-    using(DB(getConnectionPool.borrow())) { db =>
-      db.localTx(session => execution(session))
+    using(getDB) { db: DB =>
+      db.localTx((session: DBSession) => execution(session))
     }
-  }
-
-  def getConnectionPool: ConnectionPool = {
-    ConnectionPool.get()
   }
 }
 
@@ -41,6 +39,14 @@ trait DatabaseSupport {
  * 数据库连接池，启动服务时需要执行init方法初始化数据库
  */
 object DatabaseSupport extends LazyLogging {
+
+  def getConnectionPool: ConnectionPool = {
+    ConnectionPool.get()
+  }
+
+  def getDB: DB = {
+    DB(ConnectionPool.get().borrow())
+  }
 
   val defaultConfig = ConfigLoader.defaultConfig
 
