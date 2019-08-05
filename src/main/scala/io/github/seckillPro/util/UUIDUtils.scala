@@ -9,7 +9,7 @@ import java.util.UUID
  * @time 2019年8月1日
  * @version v2.0
  */
-object UUIDUtil {
+object UUIDUtils {
 
   def uuid = UUID.randomUUID().toString.replace("-", "")
 

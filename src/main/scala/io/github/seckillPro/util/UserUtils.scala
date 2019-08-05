@@ -13,7 +13,7 @@ import io.github.seckillPro.entity.SeckillUser
  * @time 2019年8月1日
  * @version v2.0
  */
-object UserUtil {
+object UserUtils {
 
   /**
    * 测试
@@ -28,7 +28,7 @@ object UserUtil {
     // 生成用户
     for (i <- 0 until count) {
       val user = SeckillUser(Option(13000000000L + i), "user" + i,
-        MD5Util.inputPassToDbPass("123456", "1a2b3c"), "1a2b3c", "", 1)
+        MD5Utils.inputPassToDbPass("123456", "1a2b3c"), "1a2b3c", "", 1)
       users.:+(user)
     }
     println("create user")
@@ -48,7 +48,7 @@ object UserUtil {
       co.setRequestMethod("POST")
       co.setDoOutput(true)
       val out = co.getOutputStream
-      val params = "mobile=" + user.id + "&password=" + MD5Util.inputPassToFormPass("123456")
+      val params = "mobile=" + user.id + "&password=" + MD5Utils.inputPassToFormPass("123456")
       out.write(params.getBytes())
       out.flush()
       val inputStream = co.getInputStream

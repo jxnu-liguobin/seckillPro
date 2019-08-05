@@ -9,7 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils
  * @time 2019年8月1日
  * @version v2.0
  */
-object MD5Util {
+object MD5Utils {
 
   /**
    * 测试
