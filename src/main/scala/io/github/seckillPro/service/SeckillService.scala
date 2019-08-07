@@ -1,9 +1,9 @@
 package io.github.seckillPro.service
 
 import com.typesafe.scalalogging.LazyLogging
-import io.github.seckillPro.db.DatabaseSupport
 import io.github.seckillPro.entity.SeckillUser
-import io.github.seckillPro.presenter.GoodsVo
+import io.github.seckillPro.exception.GlobalException
+import io.github.seckillPro.presenter.{CodeMsg, GoodsVo}
 import io.github.seckillPro.redis.RedisService
 import io.github.seckillPro.redis.key.SeckillKey
 import io.github.seckillPro.util.{MD5Utils, UUIDUtils}
@@ -24,7 +24,6 @@ trait SeckillService extends LazyLogging {
    * 秒杀
    */
   def seckill(user: SeckillUser, goodsVo: GoodsVo) = {
-    DatabaseSupport.getDB.beginIfNotYet()
     (for {
       // 减库存 下订单 写入秒杀订单
       //TODO 这个事务有问题，库存还是被减了
@@ -35,7 +34,7 @@ trait SeckillService extends LazyLogging {
           //成功反回订单，失败反回None
           logger.info(s"reduce stock status: ${success}")
           OrderService.createOrder(user, goodsVo).map {
-            case order@Some(o) =>
+            case order@Some(_) =>
               logger.info(s"reduce stock successful when create order")
               order
             case order@None =>
@@ -52,8 +51,7 @@ trait SeckillService extends LazyLogging {
       //减库存 下订单 写入秒杀订单
       case e: Exception =>
         logger.warn(s"Seckill failed by: ${e.getMessage}, then rollback")
-        DatabaseSupport.getDB.rollbackIfActive()
-        None
+        throw GlobalException(CodeMsg.SECKILL_FAIL)
     }
   }
 
@@ -61,14 +59,12 @@ trait SeckillService extends LazyLogging {
    * 还原环境【测试用】
    */
   def reset(goodsList: Seq[GoodsVo]) = {
-    DatabaseSupport.getDB.beginIfNotYet()
     (for {
       _ <- GoodsService.resetStock(goodsList)
       _ <- OrderService.deleteOrders()
     } yield Unit).recover {
       case e: Exception =>
         logger.warn(s"Reset goods list failed by: ${e.getMessage}, then rollback")
-        DatabaseSupport.getDB.rollbackIfActive()
         Unit
     }
   }
@@ -84,7 +80,10 @@ trait SeckillService extends LazyLogging {
       case Some(order) => Future.successful(order.goodsId.getOrElse(-1))
       case None => getGoodsOver(goodsId).map {
         //因为卖完了
-        case true => -1
+        case true => {
+          throw GlobalException(CodeMsg.SECKILL_OVER)
+          //          -1
+        }
         case false => 0
       }
     }
