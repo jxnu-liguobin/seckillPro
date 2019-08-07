@@ -6,7 +6,7 @@ import com.google.gson._
 import io.github.seckillPro.entity.SeckillOrder
 
 /**
- * 自定义的序列化
+ * 自定义SeckillOrder的序列化
  *
  * @author 梦境迷离
  * @time 2019-08-06

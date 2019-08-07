@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
- * 秒杀服务
+ * 秒杀
  *
  * @author 梦境迷离
  * @time 2019-08-06

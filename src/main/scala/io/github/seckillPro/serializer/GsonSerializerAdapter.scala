@@ -4,7 +4,7 @@ import java.lang.reflect.Type
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import io.github.seckillPro.entity.SeckillOrder
+import io.github.seckillPro.entity.{SeckillOrder, SeckillUser}
 
 /**
  * gson序列化
@@ -15,8 +15,12 @@ import io.github.seckillPro.entity.SeckillOrder
  */
 object GsonSerializerAdapter {
 
-  final lazy private val IntListType: Type = new TypeToken[SeckillOrder]() {}.getType
-  final lazy private val gs = getGsonBuilder.registerTypeAdapter(IntListType, SeckillOrderSerialize).create
+  final lazy private val seckillOrder: Type = new TypeToken[SeckillOrder]() {}.getType
+  final lazy private val seckillUser: Type = new TypeToken[SeckillUser]() {}.getType
+  final lazy private val gs = getGsonBuilder.
+    registerTypeAdapter(seckillOrder, SeckillOrderSerialize).
+    registerTypeAdapter(seckillUser, SeckillUserSerialize).
+    create()
 
   def getGson = gs
 
