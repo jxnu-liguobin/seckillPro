@@ -30,6 +30,8 @@ trait OrderDao extends CommonComponet {
     }
   }
 
+  //  TODO 事务移到service
+
   /**
    * 订单插入成功，并返回主键
    */
@@ -43,6 +45,8 @@ trait OrderDao extends CommonComponet {
               """.updateAndReturnGeneratedKey("id").apply()
     }
   }
+
+  //  TODO 事务移到service
 
   /**
    * 新增秒杀订单

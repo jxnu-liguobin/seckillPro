@@ -29,6 +29,8 @@ trait UserDao extends CommonComponet {
     }
   }
 
+  //  TODO 事务移到service
+
   /**
    * 新增用户
    */

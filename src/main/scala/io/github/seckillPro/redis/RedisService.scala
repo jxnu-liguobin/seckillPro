@@ -2,9 +2,9 @@ package io.github.seckillPro.redis
 
 import java.util
 
-import com.google.gson.GsonBuilder
 import com.typesafe.scalalogging.LazyLogging
 import io.github.seckillPro.config.RedisPoolFactory
+import io.github.seckillPro.serializer.GsonSerializerAdapter
 import io.github.seckillPro.util.{ResourceUtils, VerifyEmpty}
 import redis.clients.jedis.{Jedis, ScanParams, ScanResult}
 
@@ -20,7 +20,8 @@ import scala.collection.mutable.ArrayBuffer
 object RedisService extends LazyLogging {
 
   final lazy private val jedisPool = RedisPoolFactory.JedisPoolFactory()
-  final lazy private val gs = new GsonBuilder().serializeNulls().create()
+
+  private val gs = GsonSerializerAdapter.getGson
 
   def get[T](prefix: KeyPrefix, key: String, clazz: Class[T]): T = {
     try {

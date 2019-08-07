@@ -2,6 +2,8 @@ package io.github.service.test
 
 import io.github.BaseTest
 import io.github.seckillPro.entity.SeckillUser
+import io.github.seckillPro.redis.RedisService
+import io.github.seckillPro.redis.key.OrderKey
 import io.github.seckillPro.service.{GoodsService, OrderService}
 import io.github.seckillPro.util.MD5Utils
 
@@ -16,8 +18,10 @@ import scala.concurrent.duration.Duration
  */
 object OrderServiceTest extends BaseTest with App {
 
-  val seckillOrder = Await.result(OrderService.getSeckillOrderByUserIdGoodsId(1, 1), Duration.Inf)
-  println(seckillOrder)
+  RedisService.set(OrderKey.getSeckillOrderByUidGid, "" + 15312345678L + "_" + 1, mockSeckillOrder)
+
+  val seckillOrder = Await.result(OrderService.getSeckillOrderByUserIdGoodsId(15312345678L, 1), Duration.Inf)
+  println("order => " + seckillOrder)
 
   val goodsVo = Await.result(GoodsService.getGoodsVoByGoodsId(1), Duration.Inf)
   println("goodsVo => " + goodsVo)

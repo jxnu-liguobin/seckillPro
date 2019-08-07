@@ -33,6 +33,8 @@ trait SeckillUserDao extends CommonComponet {
     }
   }
 
+  //  TODO 事务移到service
+
   /**
    * 根据id和密码更新秒杀用户
    */

@@ -33,7 +33,7 @@ object GoodsDaoTest extends BaseTest with App {
     case None => println("Not found")
   }
 
-  val reduceCount = Await.result(GoodsDao.reduceStock(seckillGoods), Duration.Inf)
+  val reduceCount =GoodsDao.reduceStock(seckillGoods)
   println(reduceCount)
 
   val resetStockCount = Await.result(GoodsDao.resetStock(seckillGoods), Duration.Inf)
