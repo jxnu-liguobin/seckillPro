@@ -34,6 +34,7 @@ trait DatabaseSupport extends LazyLogging {
     }
   }
 
+  @deprecated
   def localTxWithoutFuture[A](execution: DBSession ⇒ A): A =
     using(getDB) { db: DB =>
       db.localTx((session: DBSession) => execution(session))
@@ -57,7 +58,7 @@ object DatabaseSupport extends DatabaseSupport {
     DB(ConnectionPool.get().borrow())
   }
 
-  val defaultConfig = ConfigLoader.defaultConfig
+  private final lazy val defaultConfig = ConfigLoader.defaultConfig
 
   def init(config: Config = defaultConfig): Unit = {
     logger.info("Init connection pool from config scalike")

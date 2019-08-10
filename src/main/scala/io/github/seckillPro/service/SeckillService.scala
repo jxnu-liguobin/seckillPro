@@ -33,19 +33,12 @@ trait SeckillService extends SeckillServiceComponent {
           //order_info seckill_order
           //成功反回订单，失败反回None
           logger.info(s"reduce stock status: ${success}")
-          OrderService.createOrder(user, goodsVo) match {
-            case order@Some(_) =>
-              logger.info(s"reduce stock successful when create order")
-              order
-            case order@None =>
-              logger.info(s"reduce stock failed when create order")
-              None
-          }
+          OrderService.createOrder(user, goodsVo)
         case _ =>
           //卖完了，记录下
           logger.info(s"reduce stock failed: had over")
           setGoodsOver(goodsVo.goods.id.getOrElse(-1))
-          None
+          throw GlobalException(CodeMsg.SECKILL_OVER)
       }
     }
   }
@@ -54,7 +47,7 @@ trait SeckillService extends SeckillServiceComponent {
    * 还原环境【测试用】
    */
   def reset(goodsList: Seq[GoodsVo]) =
-    localTxWithoutFuture { implicit session =>
+    localTx { implicit session =>
       GoodsService.resetStock(goodsList)
       OrderService.deleteOrders()
     }

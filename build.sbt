@@ -4,6 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.12.8"
 
+//有的依赖目前并没使用到
 libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "org.scalikejdbc" %% "scalikejdbc-async" % "0.12.+",

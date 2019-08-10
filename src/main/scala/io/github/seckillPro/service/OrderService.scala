@@ -36,6 +36,7 @@ trait OrderServiceComponent extends DatabaseSupport {
   /**
    * 订单创建
    */
+  //TODO 常量提取、异常处理、订单逻辑完善
   def createOrder(user: SeckillUser, goodsVo: GoodsVo)(implicit session: DBSession = getAutoCommitSession) = {
     val orderInfo = OrderInfo(None, user.id, goodsVo.goods.id, Option(0L), goodsVo.goods.goodsName, goodsCount = 1,
       goodsVo.goods.goodsPrice, orderChannel = 1, status = 0, Option(LocalDateTime.now()), Option(LocalDateTime.now()))
@@ -44,7 +45,7 @@ trait OrderServiceComponent extends DatabaseSupport {
     OrderDao.insertSeckillOrder(seckillOrder).apply()
     //生成订单的时候写完mysql,也要写进redis中,下次点击将直接去缓存，响应快
     RedisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.id.getOrElse(-1) + "_" + goodsVo.goods.id, seckillOrder)
-    Option(orderInfo.copy(id = Some(id)))
+    orderInfo.copy(id = Some(id))
   }
 
 
