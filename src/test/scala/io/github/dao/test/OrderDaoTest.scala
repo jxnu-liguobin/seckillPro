@@ -4,9 +4,6 @@ import io.github.BaseTest
 import io.github.seckillPro.dao.OrderDao
 import io.github.seckillPro.entity.{OrderInfo, SeckillOrder}
 
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-
 /**
  *
  * @author 梦境迷离
@@ -16,28 +13,30 @@ import scala.concurrent.duration.Duration
 object OrderDaoTest extends BaseTest with App {
 
   println("===================insert======================")
-  val insertRes = Await.result(OrderDao.insert(OrderInfo(None, Option(1), Option(1), Option(1), "goodsName", 11, 1.02, 1, 2)), Duration.Inf)
+  //  val insertRes = Await.result(OrderDao.insert(OrderInfo(None, Option(1), Option(1), Option(1), "goodsName", 11, 1.02, 1, 2)).apply(), Duration.Inf)
+  val insertRes = OrderDao.insert(OrderInfo(None, Option(1), Option(1), Option(1), "goodsName", 11, 1.02, 1, 2)).apply()
   println("id => " + insertRes)
 
   println("===================insertSeckillOrder======================")
-  val insertSeckillOrderRes = Await.result(OrderDao.insertSeckillOrder(SeckillOrder(None, Option(1), Option(1), Option(1))), Duration.Inf)
+  //  val insertSeckillOrderRes = Await.result(OrderDao.insertSeckillOrder(SeckillOrder(None, Option(1), Option(1), Option(1))).apply(), Duration.Inf)
+  val insertSeckillOrderRes = OrderDao.insertSeckillOrder(SeckillOrder(None, Option(1), Option(1), Option(1))).apply()
   println(insertSeckillOrderRes)
 
   println("===================getSeckillOrderByUserIdGoodsId======================")
-  val seckillOrder = Await.result(OrderDao.getSeckillOrderByUserIdGoodsId(1,
-    1), Duration.Inf)
+  val seckillOrder = OrderDao.getSeckillOrderByUserIdGoodsId(1,
+    1).apply()
   println(seckillOrder)
 
   println("===================getOrderById======================")
-  val getOrderByIdRes = Await.result(OrderDao.getOrderById(insertRes), Duration.Inf)
+  val getOrderByIdRes = OrderDao.getOrderById(insertRes).apply()
   println(getOrderByIdRes)
 
   println("===================deleteOrders======================")
-  val deleteOrdersRes = Await.result(OrderDao.deleteOrders(), Duration.Inf)
+  val deleteOrdersRes = OrderDao.deleteOrders()
   println(deleteOrdersRes)
 
   println("===================deleteSeckillaOrders======================")
-  val deleteSeckillaOrdersRes = Await.result(OrderDao.deleteSeckillaOrders(), Duration.Inf)
+  val deleteSeckillaOrdersRes = OrderDao.deleteSeckillaOrders()
   println(deleteSeckillaOrdersRes)
 
 

@@ -1,11 +1,9 @@
 package io.github.seckillPro.dao
 
-import io.github.seckillPro.config.CommonComponet
 import io.github.seckillPro.entity.{Goods, SeckillGoods}
 import io.github.seckillPro.presenter.GoodsVo
+import io.github.seckillPro.util.ImplicitUtils
 import scalikejdbc._
-
-import scala.concurrent.Future
 
 /**
  * 商品
@@ -14,73 +12,62 @@ import scala.concurrent.Future
  * @time 2019-08-02
  * @version v2.0
  */
-trait GoodsDao extends CommonComponet {
+trait GoodsDao extends ImplicitUtils {
 
   /**
    * 查询出所有商品视图对象
    */
-  def listGoodsVo(): Future[Seq[GoodsVo]] = {
-    readOnly { implicit s =>
-      sql"""
+  def listGoodsVo() = {
+    sql"""
           select g.*,mg.seckill_price,mg.stock_count, mg.start_date, mg.end_date from seckill_goods mg left join goods g on mg.goods_id = g.id
       """.map {
-        goods =>
-          val g = Goods(Some(goods.long(1)), goods.string(2), goods.string(3),
-            goods.string(4), goods.string(5), goods.double(6), goods.int(7))
-          GoodsVo(g, goods.double(8),
-            goods.int(9),
-            goods.longOpt(10),
-            goods.longOpt(11)
-          )
-      }.list().apply()
-    }
+      goods =>
+        val g = Goods(Some(goods.long(1)), goods.string(2), goods.string(3),
+          goods.string(4), goods.string(5), goods.double(6), goods.int(7))
+        GoodsVo(g, goods.double(8),
+          goods.int(9),
+          goods.longOpt(10),
+          goods.longOpt(11)
+        )
+    }.list()
 
   }
 
   /**
    * 根据商品id=秒杀的商品id,查询出商品视图对象
    */
-  def getGoodsVoByGoodsId(goodsId: Long): Future[Option[GoodsVo]] = {
-    readOnly {
-      implicit s =>
-        sql"""
+  def getGoodsVoByGoodsId(goodsId: Long) = {
+    sql"""
               select g.*,mg.seckill_price, mg.stock_count,mg.start_date, mg.end_date from seckill_goods mg
               left join goods g on mg.goods_id = g.id where g.id = ${goodsId}
           """.map {
-          goods =>
-            val g = Goods(goods.longOpt(1), goods.string(2), goods.string(3),
-              goods.string(4), goods.string(5), goods.double(6), goods.int(7))
-            GoodsVo(g, goods.double(8),
-              goods.int(9),
-              goods.longOpt(10),
-              goods.longOpt(11)
-            )
-        }.single().apply()
-    }
+      goods =>
+        val g = Goods(goods.longOpt(1), goods.string(2), goods.string(3),
+          goods.string(4), goods.string(5), goods.double(6), goods.int(7))
+        GoodsVo(g, goods.double(8),
+          goods.int(9),
+          goods.longOpt(10),
+          goods.longOpt(11)
+        )
+    }.single()
   }
 
   /**
    * 库存减1
    */
-  def reduceStock(g: SeckillGoods): Future[Int] = {
-    localTx {
-      implicit s =>
-        sql"""
+  def reduceStock(g: SeckillGoods) = {
+    sql"""
               update seckill_goods set stock_count = stock_count - 1 where goods_id = ${g.goodsId} and stock_count > 0
-          """.update().apply()
-    }
+          """.update()
   }
 
   /**
    * 库存修改
    */
-  def resetStock(g: SeckillGoods): Future[Int] = {
-    localTx {
-      implicit s =>
-        sql"""
+  def resetStock(g: SeckillGoods) = {
+    sql"""
               update seckill_goods set stock_count = ${g.stockCount} where goods_id = ${g.goodsId}
-          """.update().apply()
-    }
+          """.update()
   }
 }
 

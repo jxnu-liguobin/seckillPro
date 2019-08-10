@@ -3,6 +3,7 @@ package io.github.service.test
 import io.github.BaseTest
 import io.github.seckillPro.dao.GoodsDao
 import io.github.seckillPro.service.SeckillService
+import scalikejdbc.DB
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -15,26 +16,25 @@ import scala.concurrent.duration.Duration
  */
 object SeckillServiceTest extends BaseTest with App {
 
-
-  test_seckill
-  test_getSeckillResult
-  test_createSeckillPath_checkPath
-//  test_reset
-  test_setGoodsOver
-  test_getGoodsOver
+  //
+  //  test_seckill
+  //  test_getSeckillResult
+  //  test_createSeckillPath_checkPath
+  test_reset
+  //  test_setGoodsOver
+  //  test_getGoodsOver
 
 
   def test_seckill = {
-    val goodsVo = Await.result(GoodsDao.getGoodsVoByGoodsId(1), Duration.Inf)
-    val res = SeckillService.seckill(mockSeckillUser, goodsVo.get) //默认商品
+    val res = SeckillService.seckill(mockSeckillUser, mockGoodsVo) //默认商品
     println("seckill:" + Await.result(res, Duration.Inf))
   }
 
   def test_reset = {
-    val goodsVo = Await.result(GoodsDao.getGoodsVoByGoodsId(1), Duration.Inf)
+    val goodsVo = GoodsDao.getGoodsVoByGoodsId(1).apply()
     println(goodsVo)
     val res = SeckillService.reset(Seq(goodsVo.get)) //默认商品
-    println("reset:" + Await.result(res, Duration.Inf))
+    println("reset:" + res)
   }
 
   def test_getSeckillResult = {

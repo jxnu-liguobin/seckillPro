@@ -6,9 +6,6 @@ import io.github.BaseTest
 import io.github.seckillPro.dao.GoodsDao
 import io.github.seckillPro.entity.SeckillGoods
 
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-
 /**
  * 商品测试
  *
@@ -24,19 +21,19 @@ object GoodsDaoTest extends BaseTest with App {
   val price = 2
   val seckillGoods = SeckillGoods(None, goodsId, stockCount, price, Option(LocalDateTime.now()))
 
-  val listGoodsVo = Await.result(GoodsDao.listGoodsVo(), Duration.Inf)
+  val listGoodsVo = GoodsDao.listGoodsVo().apply()
   listGoodsVo.foreach(x => println(x))
 
-  val goodsVo = Await.result(GoodsDao.getGoodsVoByGoodsId(1), Duration.Inf)
+  val goodsVo = GoodsDao.getGoodsVoByGoodsId(1).apply()
   goodsVo match {
     case Some(goodsVo) => println(goodsVo)
     case None => println("Not found")
   }
 
-  val reduceCount =GoodsDao.reduceStock(seckillGoods)
+  val reduceCount = GoodsDao.reduceStock(seckillGoods).apply()
   println(reduceCount)
 
-  val resetStockCount = Await.result(GoodsDao.resetStock(seckillGoods), Duration.Inf)
+  val resetStockCount = GoodsDao.resetStock(seckillGoods).apply()
   println(resetStockCount)
 
 }

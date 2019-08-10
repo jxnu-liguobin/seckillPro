@@ -18,7 +18,7 @@ import scala.concurrent.Future
  * @time 2019-08-01
  * @version v2.0
  */
-trait DatabaseSupport {
+trait DatabaseSupport extends LazyLogging {
 
   import DatabaseSupport._
 
@@ -33,12 +33,21 @@ trait DatabaseSupport {
       db.localTx((session: DBSession) => execution(session))
     }
   }
+
+  def localTxWithoutFuture[A](execution: DBSession ⇒ A): A =
+    using(getDB) { db: DB =>
+      db.localTx((session: DBSession) => execution(session))
+    }
+
+  def getAutoCommitSession = getDB.autoCommitSession()
+
+  def getReadOnlySession = getDB.readOnlySession()
 }
 
 /**
  * 数据库连接池，启动服务时需要执行init方法初始化数据库
  */
-object DatabaseSupport extends LazyLogging {
+object DatabaseSupport extends DatabaseSupport {
 
   def getConnectionPool: ConnectionPool = {
     ConnectionPool.get()

@@ -4,6 +4,7 @@ import io.github.BaseTest
 import io.github.seckillPro.service.GoodsService
 
 import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 /**
@@ -17,13 +18,13 @@ object GoodsServiceTest extends BaseTest with App {
   val goodsVo = Await.result(GoodsService.getGoodsVoByGoodsId(1), Duration.Inf)
   println(goodsVo)
 
-  val goodsVos = Await.result(GoodsService.listGoodsVo, Duration.Inf)
+  val goodsVos = GoodsService.listGoodsVo
   goodsVos.foreach(println)
 
-  val c = Await.result(GoodsService.reduceStock(goodsVo.get.copy(stockCount = 9)), Duration.Inf)
+  val c = GoodsService.reduceStock(goodsVo.get.copy(stockCount = 9))
   println(c)
 
-  val sum = Await.result(GoodsService.resetStock(goodsVos), Duration.Inf)
-  println(sum)
+  //  val sum = Await.result(GoodsService.resetStock(goodsVos), Duration.Inf)
+  //  println(sum)
 
 }

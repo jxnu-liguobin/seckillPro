@@ -18,12 +18,12 @@ object SeckillUserServiceTest extends BaseTest with App {
   test_updatePassword()
 
   def test_getById(): Unit = {
-    val u = Await.result(SeckillUserService.getById(mockUserId), Duration.Inf)
+    val u = SeckillUserService.getById(mockUserId)
     println(u)
   }
 
   def test_updatePassword(): Unit = {
-    val u = Await.result(SeckillUserService.updatePassword(SeckillUserService.COOKI_NAME_TOKEN, mockUserId, "123456"), Duration.Inf)
+    val u = Await.result(SeckillUserService.updatePasswordById(SeckillUserService.COOKI_NAME_TOKEN, mockUserId, "123456"), Duration.Inf)
     println(u)
   }
 

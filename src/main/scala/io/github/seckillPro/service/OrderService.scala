@@ -2,13 +2,13 @@ package io.github.seckillPro.service
 
 import java.time.LocalDateTime
 
-import com.typesafe.scalalogging.LazyLogging
 import io.github.seckillPro.dao.OrderDao
+import io.github.seckillPro.db.DatabaseSupport
 import io.github.seckillPro.entity.{OrderInfo, SeckillOrder, SeckillUser}
-import io.github.seckillPro.exception.GlobalException
-import io.github.seckillPro.presenter.{CodeMsg, GoodsVo}
+import io.github.seckillPro.presenter.GoodsVo
 import io.github.seckillPro.redis.RedisService
 import io.github.seckillPro.redis.key.OrderKey
+import scalikejdbc.DBSession
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -20,61 +20,48 @@ import scala.concurrent.Future
  * @time 2019-08-05
  * @version v2.0
  */
-trait OrderService extends LazyLogging {
+trait OrderService extends OrderServiceComponent {
 
   /**
    * 是否已经秒杀过【(user.id，goods.id)是数据库的唯一索引，且秒杀时，这个将存进redis】
    */
-  def getSeckillOrderByUserIdGoodsId(userId: Long, goodsId: Long) = {
+  def getSeckillOrderByUserIdGoodsId(userId: Long, goodsId: Long) =
     Future {
       Option(RedisService.get(OrderKey.getSeckillOrderByUidGid, "" + userId + "_" + goodsId, classOf[SeckillOrder]))
     }
-  }
 
+}
+
+trait OrderServiceComponent extends DatabaseSupport {
   /**
    * 订单创建
    */
-  def createOrder(user: SeckillUser, goodsVo: GoodsVo) = {
+  def createOrder(user: SeckillUser, goodsVo: GoodsVo)(implicit session: DBSession = getAutoCommitSession) = {
     val orderInfo = OrderInfo(None, user.id, goodsVo.goods.id, Option(0L), goodsVo.goods.goodsName, goodsCount = 1,
       goodsVo.goods.goodsPrice, orderChannel = 1, status = 0, Option(LocalDateTime.now()), Option(LocalDateTime.now()))
-    (for {
-      id <- OrderDao.insert(orderInfo)
-      seckillOrder = SeckillOrder(None, user.id, Option(id), goodsVo.goods.id)
-      _ <- OrderDao.insertSeckillOrder(seckillOrder)
-    } yield {
-      //    生成订单的时候写完mysql,也要写进redis中,下次点击将直接去缓存，响应快
-      RedisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.id.getOrElse(-1) + "_" + goodsVo.goods.id, seckillOrder)
-      Option(orderInfo.copy(id = Some(id)))
-    }).recover {
-      case e: Exception =>
-        logger.warn(s"Seckill failed when create order by: ${e.getMessage}, then rollback")
-        throw GlobalException(CodeMsg.SECKILL_FAIL)
-      //        None
-    }
+    val id = OrderDao.insert(orderInfo).apply()
+    val seckillOrder = SeckillOrder(None, user.id, Option(id), goodsVo.goods.id)
+    OrderDao.insertSeckillOrder(seckillOrder).apply()
+    //生成订单的时候写完mysql,也要写进redis中,下次点击将直接去缓存，响应快
+    RedisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.id.getOrElse(-1) + "_" + goodsVo.goods.id, seckillOrder)
+    Option(orderInfo.copy(id = Some(id)))
   }
+
 
   /**
    * 根据订单id查询订单信息
    */
-  def getOrderById(orderId: Long) = {
-    OrderDao.getOrderById(orderId)
-  }
+  def getOrderById(orderId: Long)(implicit session: DBSession = getReadOnlySession) =
+    OrderDao.getOrderById(orderId).apply()
 
   /**
    * 删除订单
    *
    * 先删除订单再删除秒杀订单
    */
-  def deleteOrders() = {
-    (for {
-      _ <- OrderDao.deleteOrders()
-      _ <- OrderDao.deleteSeckillaOrders()
-    } yield Unit).recover {
-      case e: Exception =>
-        logger.warn(s"Delete all orders failed by: ${e.getMessage}, then rollback")
-        throw GlobalException(CodeMsg.SERVER_ERROR)
-
-    }
+  def deleteOrders()(implicit session: DBSession = getAutoCommitSession) = {
+    OrderDao.deleteOrders().apply()
+    OrderDao.deleteSeckillaOrders().apply()
   }
 }
 

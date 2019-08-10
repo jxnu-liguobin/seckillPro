@@ -25,11 +25,11 @@ object OrderServiceTest extends BaseTest with App {
 
   val goodsVo = Await.result(GoodsService.getGoodsVoByGoodsId(1), Duration.Inf)
   println("goodsVo => " + goodsVo)
-  val createOrder = Await.result(OrderService.createOrder(SeckillUser(Option(15312345678L), "user",
-    MD5Utils.inputPassToDbPass("123456", "1a2b3c"), "1a2b3c", "", 1), goodsVo.get), Duration.Inf)
+  val createOrder = OrderService.createOrder(SeckillUser(Option(15312345678L), "user",
+    MD5Utils.inputPassToDbPass("123456", "1a2b3c"), "1a2b3c", "", 1), goodsVo.get)
   println(createOrder)
 
-  val order = Await.result(OrderService.getOrderById(1), Duration.Inf)
+  val order = OrderService.getOrderById(1)
   println(order)
 
 }

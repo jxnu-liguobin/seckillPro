@@ -3,9 +3,6 @@ package io.github.dao.test
 import io.github.BaseTest
 import io.github.seckillPro.dao.UserDao
 
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-
 /**
  * 普通用户测试
  *
@@ -15,7 +12,7 @@ import scala.concurrent.duration.Duration
  */
 object UserDaoTest extends BaseTest with App {
 
-  val user = Await.result(UserDao.getById(1), Duration.Inf)
+  val user = UserDao.getById(1).apply()
 
   println(user.getOrElse("null"))
 }
