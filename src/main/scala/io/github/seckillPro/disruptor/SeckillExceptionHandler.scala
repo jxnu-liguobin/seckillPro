@@ -12,7 +12,7 @@ import com.typesafe.scalalogging.LazyLogging
 object SeckillExceptionHandler extends ExceptionHandler[SeckillMessage] with LazyLogging {
 
   override def handleEventException(throwable: Throwable, l: Long, t: SeckillMessage): Unit = {
-    logger.error(s"exception when goodsId: [${t.goodsId}], seckillUser: [${t.seckillUser.id}], message: [${throwable.getLocalizedMessage}]", throwable)
+    logger.error(s"exception when goodsId: [${t.goodsId}], seckillUser: [${t.seckillUser}], message: [${throwable.getLocalizedMessage}]", throwable)
   }
 
   override def handleOnShutdownException(throwable: Throwable): Unit = {
