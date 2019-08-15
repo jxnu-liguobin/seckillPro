@@ -106,4 +106,10 @@ object CodeMsg {
    */
   val SECKILL_FAIL = CodeMsg(500502, "秒杀失败")
 
+
+  /**
+   * 其他
+   */
+  val INTERNAL_ERROR = CodeMsg(500, "服务器内部错误")
+
 }

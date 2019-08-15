@@ -19,5 +19,7 @@ libraryDependencies ++= Seq(
   "com.alibaba" % "fastjson" % "1.2.56",
   "redis.clients" % "jedis" % "2.9.0",
   "com.typesafe.play" %% "play-json" % "2.7.0",
-  "com.google.code.gson" % "gson" % "2.8.5"
+  "com.google.code.gson" % "gson" % "2.8.5",
+  "com.lmax" % "disruptor" % "3.4.2",
+  "com.google.guava" % "guava" % "23.0",
 )
