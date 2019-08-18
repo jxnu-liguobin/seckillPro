@@ -5,6 +5,7 @@ version := "0.1"
 scalaVersion := "2.12.8"
 
 //有的依赖目前并没使用到
+//TODO 拆分依赖与版本、增加Scala跨版本配置
 libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "org.scalikejdbc" %% "scalikejdbc-async" % "0.12.+",
@@ -22,4 +23,6 @@ libraryDependencies ++= Seq(
   "com.google.code.gson" % "gson" % "2.8.5",
   "com.lmax" % "disruptor" % "3.4.2",
   "com.google.guava" % "guava" % "23.0",
+  "io.undertow" % "undertow-core" % "2.0.24.Final",
+  "com.google.inject" % "guice" % "4.2.2"
 )
