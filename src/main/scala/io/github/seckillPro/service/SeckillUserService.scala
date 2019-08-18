@@ -1,7 +1,7 @@
 package io.github.seckillPro.service
 
 import io.github.seckillPro.dao.SeckillUserDao
-import io.github.seckillPro.db.DatabaseSupport
+import io.github.seckillPro.database.RepositorySupport
 import io.github.seckillPro.entity.SeckillUser
 import io.github.seckillPro.exception.GlobalException
 import io.github.seckillPro.presenter.CodeMsg
@@ -42,7 +42,7 @@ trait SeckillUserService extends SeckillUserServiceComponent {
   }
 }
 
-trait SeckillUserServiceComponent extends DatabaseSupport {
+trait SeckillUserServiceComponent extends RepositorySupport {
 
   //  TODO
   /**

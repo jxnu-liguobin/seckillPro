@@ -1,5 +1,6 @@
-package io.github.seckillPro.config
+package io.github.seckillPro.redis
 
+import io.github.seckillPro.config.RedisConfig
 import redis.clients.jedis.{JedisPool, JedisPoolConfig}
 
 /**

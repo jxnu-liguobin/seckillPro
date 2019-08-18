@@ -1,14 +1,18 @@
 package io.github.dao.test
 
-import io.github.seckillPro.db.DatabaseSupport
+import io.github.seckillPro.database.RepositorySupport
 import scalikejdbc._
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-object TestDbSql extends App with DatabaseSupport {
+object TestDbSql extends App {
 
-  DatabaseSupport.init()
+  object RepositorySupportTest extends RepositorySupport
+
+  import RepositorySupportTest._
+
+  RepositorySupportTest.init()
 
   select
 

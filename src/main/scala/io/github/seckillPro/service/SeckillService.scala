@@ -1,6 +1,6 @@
 package io.github.seckillPro.service
 
-import io.github.seckillPro.db.DatabaseSupport
+import io.github.seckillPro.database.RepositorySupport
 import io.github.seckillPro.entity.SeckillUser
 import io.github.seckillPro.exception.GlobalException
 import io.github.seckillPro.presenter.{CodeMsg, GoodsVo}
@@ -115,6 +115,6 @@ trait SeckillService extends SeckillServiceComponent {
     }
 }
 
-trait SeckillServiceComponent extends DatabaseSupport
+trait SeckillServiceComponent extends RepositorySupport
 
 object SeckillService extends SeckillService

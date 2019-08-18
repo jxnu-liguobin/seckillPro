@@ -3,7 +3,6 @@ package io.github.seckillPro.redis
 import java.util
 
 import com.typesafe.scalalogging.LazyLogging
-import io.github.seckillPro.config.RedisPoolFactory
 import io.github.seckillPro.serializer.GsonSerializerAdapter
 import io.github.seckillPro.util.{ResourceUtils, VerifyEmpty}
 import redis.clients.jedis.{Jedis, ScanParams, ScanResult}

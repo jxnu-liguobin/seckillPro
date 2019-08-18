@@ -12,13 +12,13 @@ case class RedisConfig(host: String, port: Int, timeout: Int, password: String, 
 object RedisConfig {
 
   def getRedisConfig = RedisConfig(
-    ConfigLoader.getStringValue("redis.host"),
-    ConfigLoader.getIntValue("redis.port"),
-    ConfigLoader.getIntValue("redis.timeout"),
-    ConfigLoader.getStringValue("redis.password"),
-    ConfigLoader.getIntValue("redis.poolMaxTotal"),
-    ConfigLoader.getIntValue("redis.poolMaxIdle"),
-    ConfigLoader.getIntValue("redis.poolMaxWait")
+    ConfigLoader.getStringValue("redis.host").getOrElse("127.0.0.1"),
+    ConfigLoader.getIntValue("redis.port").getOrElse(6379),
+    ConfigLoader.getIntValue("redis.timeout").getOrElse(10),
+    ConfigLoader.getStringValue("redis.password").getOrElse(""),
+    ConfigLoader.getIntValue("redis.poolMaxTotal").getOrElse(1000),
+    ConfigLoader.getIntValue("redis.poolMaxIdle").getOrElse(500),
+    ConfigLoader.getIntValue("redis.poolMaxWait").getOrElse(500)
   )
 
 }

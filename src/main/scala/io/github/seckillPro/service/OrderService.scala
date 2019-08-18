@@ -3,7 +3,7 @@ package io.github.seckillPro.service
 import java.time.LocalDateTime
 
 import io.github.seckillPro.dao.OrderDao
-import io.github.seckillPro.db.DatabaseSupport
+import io.github.seckillPro.database.RepositorySupport
 import io.github.seckillPro.entity.{OrderInfo, SeckillOrder, SeckillUser}
 import io.github.seckillPro.presenter.GoodsVo
 import io.github.seckillPro.redis.RedisService
@@ -32,7 +32,7 @@ trait OrderService extends OrderServiceComponent {
 
 }
 
-trait OrderServiceComponent extends DatabaseSupport {
+trait OrderServiceComponent extends RepositorySupport {
   /**
    * 订单创建
    */

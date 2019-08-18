@@ -11,10 +11,13 @@ import com.typesafe.config.ConfigFactory
  */
 object ConfigLoader {
 
-  def defaultConfig = ConfigFactory.load("application.conf")
 
-  def getStringValue(key: String) = defaultConfig.getString(key)
+  private final lazy val config = ConfigFactory.load("application.conf")
+  private final lazy val configWrapper = ConfigConversions.ConfigWrapper(config)
 
-  def getIntValue(key: String) = defaultConfig.getInt(key)
+  def getStringValue(key: String) = configWrapper.getStringOpt(key)
 
+  def getIntValue(key: String) = configWrapper.getIntOpt(key)
+
+  def getConfig = config
 }

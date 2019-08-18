@@ -2,7 +2,7 @@ package io.github
 
 import java.time.LocalDateTime
 
-import io.github.seckillPro.db.DatabaseSupport
+import io.github.seckillPro.database.RepositorySupport
 import io.github.seckillPro.entity.{Goods, OrderInfo, SeckillOrder, SeckillUser}
 import io.github.seckillPro.presenter.GoodsVo
 import io.github.seckillPro.util.MD5Utils
@@ -19,7 +19,9 @@ import scalikejdbc.DB
  */
 class BaseTest {
 
-  DatabaseSupport.init()
+  object RepositorySupportTest extends RepositorySupport
+
+  RepositorySupportTest.init()
 
   /**
    * -1表示记录不存在时的默认值
@@ -35,7 +37,7 @@ class BaseTest {
 
   val mockUserId = 15312345678L
 
-  implicit val session = DatabaseSupport.getDB.autoCommitSession()
+  implicit val session = RepositorySupportTest.getDB.autoCommitSession()
 
   val mockGoodsVo = GoodsVo(Goods(Some(1), "android手机", "android手机", "/img/meta10.png", "android手机", 100.0, 100)
     , 0.01, 1, Option(LocalDateTime.now()), Option(LocalDateTime.now()))

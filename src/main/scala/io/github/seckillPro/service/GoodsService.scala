@@ -1,7 +1,7 @@
 package io.github.seckillPro.service
 
 import io.github.seckillPro.dao.GoodsDao
-import io.github.seckillPro.db.DatabaseSupport
+import io.github.seckillPro.database.RepositorySupport
 import io.github.seckillPro.entity.SeckillGoods
 import io.github.seckillPro.presenter.GoodsVo
 import scalikejdbc.DBSession
@@ -40,7 +40,7 @@ trait GoodsService extends GoodsServiceComponent {
 /**
  * 用以实现需要事务处理的操作
  */
-trait GoodsServiceComponent extends DatabaseSupport {
+trait GoodsServiceComponent extends RepositorySupport {
 
   /**
    * 修改商品库存
