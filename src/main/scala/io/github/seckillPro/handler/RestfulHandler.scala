@@ -4,6 +4,7 @@ import java.nio.ByteBuffer
 import java.util.concurrent.{Executor, Executors}
 
 import com.typesafe.scalalogging.LazyLogging
+import io.github.seckillPro.concurrent.Executable
 import io.undertow.security.api.AuthenticationMechanism.AuthenticationMechanismOutcome
 import io.undertow.server.{HttpHandler, HttpServerExchange}
 import io.undertow.util.Methods._
