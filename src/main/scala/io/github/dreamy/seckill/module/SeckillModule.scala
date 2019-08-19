@@ -9,6 +9,6 @@ package io.github.dreamy.seckill.module
  */
 class SeckillModule extends AbstractModuleSupport {
 
-  //  bindComponents("io.github.seckillPro.handler")
+  //  bindComponents("io.github.dreamy.seckill.handler")
 
 }

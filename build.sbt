@@ -1,6 +1,6 @@
 name := "seckillPro"
 
-organization := "io.github.dreamy.seckill"
+organization := "io.github.dreamy"
 
 version := "0.1"
 

@@ -19,7 +19,7 @@ import io.undertow.{ Undertow, UndertowOptions }
 class SeckillServer(injector: Injector) extends LazyLogging {
 
   private final lazy val started = new AtomicBoolean(false)
-  private final lazy val handlers: Set[http.RoutingHandler] = Routes.getRoutingHandlers(injector, "io.github.seckillPro.handler")
+  private final lazy val handlers: Set[http.RoutingHandler] = Routes.getRoutingHandlers(injector, "io.github.dreamy.seckill.handler")
   private final var undertow: Undertow = _
   private final val host = ConfigLoader.getStringValue("seckill.server.host").getOrElse("127.0.0.1")
   private final val port = ConfigLoader.getIntValue("seckill.server.port").getOrElse(80)
