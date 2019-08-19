@@ -1,11 +1,11 @@
 package io.github.service.test
 
 import io.github.BaseTest
-import io.github.seckillPro.entity.SeckillUser
-import io.github.seckillPro.redis.RedisService
-import io.github.seckillPro.redis.key.OrderKey
-import io.github.seckillPro.service.{GoodsService, OrderService}
-import io.github.seckillPro.util.MD5Utils
+import io.github.dreamy.seckill.entity.SeckillUser
+import io.github.dreamy.seckill.redis.RedisService
+import io.github.dreamy.seckill.redis.key.OrderKey
+import io.github.dreamy.seckill.service.{ GoodsService, OrderService }
+import io.github.dreamy.seckill.util.MD5Utils
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration

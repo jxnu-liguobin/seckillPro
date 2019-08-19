@@ -1,5 +1,7 @@
 name := "seckillPro"
 
+organization := "io.github.dreamy.seckill"
+
 version := "0.1"
 
 scalaVersion := "2.12.8"

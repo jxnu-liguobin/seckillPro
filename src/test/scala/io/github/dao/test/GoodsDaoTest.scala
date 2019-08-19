@@ -3,8 +3,8 @@ package io.github.dao.test
 import java.time.LocalDateTime
 
 import io.github.BaseTest
-import io.github.seckillPro.dao.GoodsDao
-import io.github.seckillPro.entity.SeckillGoods
+import io.github.dreamy.seckill.dao.GoodsDao
+import io.github.dreamy.seckill.entity.SeckillGoods
 
 /**
  * 商品测试

@@ -1,7 +1,7 @@
 package io.github
 
-import io.github.seckillPro.disruptor.SeckillMessageProducer
-import io.github.seckillPro.disruptor.SeckillMessageQueueServer.DisruptorEngine
+import io.github.dreamy.seckill.disruptor.SeckillMessageProducer
+import io.github.dreamy.seckill.disruptor.SeckillMessageQueueServer.DisruptorEngine
 
 /**
  *

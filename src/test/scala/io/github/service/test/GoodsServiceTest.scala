@@ -1,7 +1,7 @@
 package io.github.service.test
 
 import io.github.BaseTest
-import io.github.seckillPro.service.GoodsService
+import io.github.dreamy.seckill.service.GoodsService
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global

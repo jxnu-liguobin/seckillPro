@@ -2,10 +2,10 @@ package io.github
 
 import java.time.LocalDateTime
 
-import io.github.seckillPro.database.RepositorySupport
-import io.github.seckillPro.entity.{Goods, OrderInfo, SeckillOrder, SeckillUser}
-import io.github.seckillPro.presenter.GoodsVo
-import io.github.seckillPro.util.MD5Utils
+import io.github.dreamy.seckill.database.RepositorySupport
+import io.github.dreamy.seckill.entity.{ Goods, OrderInfo, SeckillOrder, SeckillUser }
+import io.github.dreamy.seckill.presenter.GoodsVo
+import io.github.dreamy.seckill.util.MD5Utils
 import scalikejdbc.DB
 
 /**

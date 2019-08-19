@@ -1,9 +1,9 @@
 package io.github.dao.test
 
 import io.github.BaseTest
-import io.github.seckillPro.dao.SeckillUserDao
-import io.github.seckillPro.entity.SeckillUser
-import io.github.seckillPro.util.MD5Utils
+import io.github.dreamy.seckill.dao.SeckillUserDao
+import io.github.dreamy.seckill.entity.SeckillUser
+import io.github.dreamy.seckill.util.MD5Utils
 
 /**
  * 秒杀用户测试

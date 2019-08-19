@@ -1,8 +1,8 @@
 package io.github.service.test
 
 import io.github.BaseTest
-import io.github.seckillPro.dao.GoodsDao
-import io.github.seckillPro.service.SeckillService
+import io.github.dreamy.seckill.dao.GoodsDao
+import io.github.dreamy.seckill.service.SeckillService
 import scalikejdbc.DB
 
 import scala.concurrent.Await

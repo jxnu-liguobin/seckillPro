@@ -1,9 +1,9 @@
 package io.github.service.test
 
 import io.github.BaseTest
-import io.github.seckillPro.entity.User
-import io.github.seckillPro.redis.RedisService
-import io.github.seckillPro.redis.key.SeckillKey
+import io.github.dreamy.seckill.entity.User
+import io.github.dreamy.seckill.redis.RedisService
+import io.github.dreamy.seckill.redis.key.SeckillKey
 
 /**
  *

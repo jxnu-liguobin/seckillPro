@@ -1,7 +1,7 @@
 package io.github.service.test
 
 import io.github.BaseTest
-import io.github.seckillPro.service.SeckillUserService
+import io.github.dreamy.seckill.service.SeckillUserService
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration

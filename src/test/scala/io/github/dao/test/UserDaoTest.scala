@@ -1,7 +1,7 @@
 package io.github.dao.test
 
 import io.github.BaseTest
-import io.github.seckillPro.dao.UserDao
+import io.github.dreamy.seckill.dao.UserDao
 
 /**
  * 普通用户测试

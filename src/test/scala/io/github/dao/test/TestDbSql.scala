@@ -1,6 +1,6 @@
 package io.github.dao.test
 
-import io.github.seckillPro.database.RepositorySupport
+import io.github.dreamy.seckill.database.RepositorySupport
 import scalikejdbc._
 
 import scala.concurrent.Await
