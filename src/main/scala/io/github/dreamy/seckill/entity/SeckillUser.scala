@@ -8,6 +8,8 @@ import play.api.libs.json.{ Json, Writes }
 /**
  * 秒杀用户
  *
+ * id 不是自增的，可以是手机号
+ *
  * @author 梦境迷离
  * @time 2019年8月1日
  * @version v2.0

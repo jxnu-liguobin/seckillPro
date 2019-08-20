@@ -29,7 +29,7 @@ object SeckillServerStartUp extends App {
       server.startUp()
       c.await()
     } catch {
-      case _ =>
+      case exception: Exception =>
         c.countDown()
         server.shutdown()
     }

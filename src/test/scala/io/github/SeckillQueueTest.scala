@@ -1,7 +1,6 @@
 package io.github
 
-import io.github.dreamy.seckill.disruptor.SeckillMessageProducer
-import io.github.dreamy.seckill.disruptor.SeckillMessageQueueServer.DisruptorEngine
+import io.github.dreamy.seckill.disruptor.SeckillMessageQueueServer
 
 /**
  *
@@ -11,13 +10,9 @@ import io.github.dreamy.seckill.disruptor.SeckillMessageQueueServer.DisruptorEng
  */
 object SeckillQueueTest extends BaseTest with App {
 
-  val disruptor = DisruptorEngine.create
-  val ringBuffer = disruptor.start()
-  val producer = new SeckillMessageProducer(ringBuffer)
   (1 to 2).foreach {
     //秒杀所有商品id=1,2,失败回滚库存
-    x => producer.seckill(x, mockSeckillUser)
+    x => SeckillMessageQueueServer.getSeckillProducer().seckill(x, mockSeckillUser)
   }
 
-  disruptor.shutdown()
 }
