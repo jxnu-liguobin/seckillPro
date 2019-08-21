@@ -6,7 +6,7 @@ import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.presenter.{ CodeMsg, GoodsVo }
 import io.github.dreamy.seckill.redis.RedisService
 import io.github.dreamy.seckill.redis.key.SeckillKey
-import io.github.dreamy.seckill.util.{ MD5Utils, UUIDUtils }
+import io.github.dreamy.seckill.util.{ MD5Utils, UUIDUtils, VerifyEmpty }
 import scalikejdbc.DBSession
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -92,7 +92,7 @@ trait SeckillService extends SeckillServiceComponent {
    */
   def createSeckillPath(user: SeckillUser, goodsId: Long) =
     Future {
-      if (user == null || goodsId < 1) {
+      if (VerifyEmpty.empty(user) || goodsId < 1) {
         None
       } else {
         val str = MD5Utils.md5(UUIDUtils.uuid + "123456")
@@ -106,7 +106,7 @@ trait SeckillService extends SeckillServiceComponent {
    */
   def checkPath(user: SeckillUser, goodsId: Long, path: String) =
     Future {
-      if (user == null || path == null) {
+      if (VerifyEmpty.oneEmpty(Seq(user, path): _*)) {
         false
       } else {
         val pathOld = RedisService.get(SeckillKey.getSeckillPath, "" + user.id + "_" + goodsId, classOf[String])

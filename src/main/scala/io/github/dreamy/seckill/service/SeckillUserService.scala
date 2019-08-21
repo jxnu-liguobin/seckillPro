@@ -4,10 +4,12 @@ import io.github.dreamy.seckill.dao.SeckillUserDao
 import io.github.dreamy.seckill.database.RepositorySupport
 import io.github.dreamy.seckill.entity.SeckillUser
 import io.github.dreamy.seckill.exception.GlobalException
-import io.github.dreamy.seckill.presenter.CodeMsg
+import io.github.dreamy.seckill.presenter.{ CodeMsg, LoginVo }
 import io.github.dreamy.seckill.redis.RedisService
 import io.github.dreamy.seckill.redis.key.SeckillUserKey
-import io.github.dreamy.seckill.util.MD5Utils
+import io.github.dreamy.seckill.util.{ MD5Utils, UUIDUtils, VerifyEmpty }
+import io.undertow.server.HttpServerExchange
+import io.undertow.server.handlers.CookieImpl
 import scalikejdbc.DBSession
 
 /**
@@ -25,7 +27,7 @@ trait SeckillUserService extends SeckillUserServiceComponent {
   def updatePasswordById(token: String, id: Long, formPass: String) = {
     localTx { implicit session =>
       val user = getById(id)
-      if (user == null)
+      if (VerifyEmpty.empty(user))
         throw GlobalException(CodeMsg.MOBILE_NOT_EXIST)
       //只有id和密码是需要的
       val newPass = MD5Utils.formPassToDBPass(formPass, user.salt)
@@ -44,20 +46,61 @@ trait SeckillUserService extends SeckillUserServiceComponent {
 
 trait SeckillUserServiceComponent extends RepositorySupport {
 
-  //  TODO
+  /**
+   * 添加cookie
+   *
+   * @param exchange undertow中 类似Java request的对象
+   * @param token    生成的uuid
+   * @param user     登录用户
+   * @return
+   */
+  private[this] def addCookie(exchange: HttpServerExchange, token: String, user: SeckillUser) = {
+    //TODO 这里存在用户
+    RedisService.set(SeckillUserKey.token, token, user)
+    val cookie = new CookieImpl(SeckillUserService.COOKI_NAME_TOKEN, token)
+    //TODO 成功设置到浏览器
+    cookie.setMaxAge(SeckillUserKey.token.expireSeconds())
+    cookie.setPath("/")
+    //TODO 未验证是否需要在service层返回HttpServerExchange对象
+    exchange.setResponseCookie(cookie)
+  }
+
   /**
    * 登录
    */
-
-  //  TODO
-  /**
-   * 设置cookie
-   */
+  def login(exchange: HttpServerExchange, loginVo: LoginVo) = {
+    localTx { implicit session =>
+      if (VerifyEmpty.empty(loginVo)) throw GlobalException(CodeMsg.SERVER_ERROR)
+      val mobile = loginVo.mobile
+      val formPass = loginVo.password
+      // 判断手机号是否存在
+      val user = getById(mobile.toLong)
+      if (VerifyEmpty.empty(user)) throw GlobalException(CodeMsg.MOBILE_NOT_EXIST)
+      // 验证密码
+      val dbPass = user.password
+      val saltDB = user.salt
+      val calcPass = MD5Utils.formPassToDBPass(formPass, saltDB)
+      if (!calcPass.equals(dbPass)) throw GlobalException(CodeMsg.PASSWORD_ERROR)
+      // 生成cookie
+      val token = UUIDUtils.uuid
+      addCookie(exchange, token, user)
+      token
+    }
+  }
 
   //  TODO
   /**
    * 根据token获取用户信息
    */
+  def getByToken(exchange: HttpServerExchange, token: String): SeckillUser = {
+    if (VerifyEmpty.empty(token)) null
+    else {
+      val user = RedisService.get(SeckillUserKey.token, token, classOf[SeckillUser])
+      // 延长有效期
+      if (VerifyEmpty.noEmpty(user)) addCookie(exchange, token, user)
+      user
+    }
+  }
 
   /**
    * 查询秒杀用户
@@ -68,7 +111,7 @@ trait SeckillUserServiceComponent extends RepositorySupport {
   def getById(id: Long)(implicit session: DBSession = getReadOnlySession) = {
     // 取缓存
     val user = RedisService.get(SeckillUserKey.getById, "" + id, classOf[SeckillUser])
-    if (user != null) {
+    if (VerifyEmpty.noEmpty(user)) {
       user
     } else {
       SeckillUserDao.getById(id).apply() match {
