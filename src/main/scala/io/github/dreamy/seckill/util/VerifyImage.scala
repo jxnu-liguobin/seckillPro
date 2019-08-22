@@ -102,7 +102,7 @@ object VerifyImage extends LazyLogging {
       false
     } else {
       val codeOld = RedisService.get(SeckillKey.getSeckillVerifyCode, user.id + "," + goodsId, classOf[Int])
-      if (VerifyEmpty.empty(codeOld) || codeOld - verifyCode != 0) {
+      if (codeOld == null || codeOld - verifyCode != 0) {
         false
       } else {
         RedisService.delete(SeckillKey.getSeckillVerifyCode, user.id + "," + goodsId)
