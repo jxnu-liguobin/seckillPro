@@ -2,8 +2,8 @@ package io.github.dreamy.seckill.util
 
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
-import java.time.{LocalDateTime, ZoneId}
-import java.util.{Calendar, Date, Locale, TimeZone}
+import java.time.{ LocalDateTime, ZoneId }
+import java.util.{ Calendar, Date, Locale, TimeZone }
 
 /**
  * 日期处理工具
@@ -266,10 +266,10 @@ object DateUtils {
    */
   implicit def longToLocalDateTime(timestamp: Option[Long])(implicit zoneId: ZoneId = default_zoneId) = {
     timestamp match {
-      case Some(t) =>
+      case Some(t) if t != 0L =>
         val instant = new Date(t).toInstant
         Option(instant.atZone(zoneId).toLocalDateTime)
-      case None => None
+      case _ => None
     }
   }
 

@@ -2,9 +2,6 @@ package io.github.dreamy.seckill.entity
 
 import java.time.LocalDateTime
 
-import io.github.dreamy.seckill.util.ImplicitUtils
-import play.api.libs.json.{ Json, Writes }
-
 /**
  * 秒杀商品
  *
@@ -15,15 +12,3 @@ import play.api.libs.json.{ Json, Writes }
 case class SeckillGoods(id: Option[Long], goodsId: Option[Long], stockCount: Int, seckillPrice: Double,
                         startDate: Option[LocalDateTime] = Option(LocalDateTime.now()),
                         endDate: Option[LocalDateTime] = Option(LocalDateTime.now()))
-
-object SeckillGoods {
-
-  implicit val writer: Writes[SeckillGoods] = (s: SeckillGoods) => Json.obj(
-    "id" -> s.id,
-    "goodsId" -> s.goodsId,
-    "stockCount" -> s.stockCount,
-    "seckillPrice" -> s.seckillPrice,
-    "startDate" -> ImplicitUtils.toStr(s.startDate),
-    "endDate" -> ImplicitUtils.toStr(s.endDate),
-  )
-}

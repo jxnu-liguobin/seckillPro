@@ -1,6 +1,6 @@
 package io.github.dreamy.seckill.concurrent
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.control.NonFatal
 
 /**

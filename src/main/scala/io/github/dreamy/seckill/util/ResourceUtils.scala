@@ -1,6 +1,6 @@
 package io.github.dreamy.seckill.util
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 import scala.util.control.Exception._
 

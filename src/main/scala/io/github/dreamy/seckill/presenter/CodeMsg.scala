@@ -14,7 +14,7 @@ case class CodeMsg private(code: Int, msg: String) {
   /**
    * 参数格式化
    */
-  def fillArgs(args: AnyRef*): CodeMsg = {
+  def fillArgs (args: AnyRef*): CodeMsg = {
     val code = this.code
     val message = String.format(this.msg, args)
     new CodeMsg(code, message)

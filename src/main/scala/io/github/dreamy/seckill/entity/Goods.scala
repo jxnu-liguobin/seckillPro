@@ -2,6 +2,7 @@ package io.github.dreamy.seckill.entity
 
 /**
  * 商品
+ * TODO id hash显示
  *
  * @author 梦境迷离
  * @time 2019年8月1日

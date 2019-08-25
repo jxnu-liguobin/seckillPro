@@ -9,4 +9,4 @@ import io.github.dreamy.seckill.entity.OrderInfo
  * @time 2019年8月2日
  * @version v2.0
  */
-case class OrderDetailVo(goods: GoodsVo, order: OrderInfo)
+case class OrderDetailPresenter (goods: GoodsVo, order: OrderInfo)

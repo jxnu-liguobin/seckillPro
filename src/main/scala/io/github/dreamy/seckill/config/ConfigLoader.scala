@@ -12,7 +12,7 @@ import com.typesafe.config.ConfigFactory
 object ConfigLoader {
 
 
-  private final lazy val config = ConfigFactory.load("application.conf")
+  private final lazy val config = ConfigFactory.load("seckill.conf")
   private final lazy val configWrapper = ConfigConversions.ConfigWrapper(config)
 
   def getStringValue(key: String) = configWrapper.getStringOpt(key)

@@ -2,7 +2,7 @@ package io.github.dreamy.seckill.util
 
 import java.time.LocalDateTime
 
-import DateUtils._
+import io.github.dreamy.seckill.util.DateUtils._
 
 /**
  * 隐式对象工具

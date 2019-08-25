@@ -52,7 +52,7 @@ class SeckillServer(injector: Injector) extends LazyLogging {
    */
   def shutdown() {
     if (started.compareAndSet(true, false)) {
-      undertow.stop()
+      if (undertow != null) undertow.stop()
     } else {
       throw new IllegalStateException("server not started")
     }

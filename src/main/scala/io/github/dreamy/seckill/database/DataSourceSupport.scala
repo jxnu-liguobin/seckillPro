@@ -17,20 +17,18 @@ import scalikejdbc.{ ConnectionPool, DataSourceConnectionPool }
  */
 trait DataSourceSupport extends LazyLogging {
 
-  private final lazy val defaultConfig = ConfigLoader.getConfig
-
   /**
    * 数据库连接池，启动服务时需要执行init方法初始化数据库
    */
-  def init(config: Config = defaultConfig): Unit = {
+  def init (): Unit = {
     logger.info("Init connection pool from config scalike")
-    val dataSourceConfig = getScalikeDatasourceProperties("seckill", config)
+    val dataSourceConfig = getScalikeDatasourceProperties("seckill", ConfigLoader.getConfig)
     val _config = new HikariConfig(dataSourceConfig)
     val dataSource = new HikariDataSource(_config)
     ConnectionPool.singleton(new DataSourceConnectionPool(dataSource))
   }
 
-  def getScalikeDatasourceProperties(databaseName: String, config: Config): Properties = {
+  def getScalikeDatasourceProperties (databaseName: String, config: Config): Properties = {
     import scala.collection.JavaConverters._
     val properties = new Properties()
     properties.setProperty("dataSourceClassName", config.getString("scalike.dataSourceClassName"))

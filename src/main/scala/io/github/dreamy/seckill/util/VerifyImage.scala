@@ -23,7 +23,7 @@ object VerifyImage extends LazyLogging {
   /**
    * 验证码创建，并写入到页面
    */
-  def createVerifyCode(user: SeckillUser, goodsId: Long) = {
+  def createVerifyCode (user: SeckillUser, goodsId: Long) = {
     if (VerifyEmpty.empty(user) || goodsId <= 0) {
       null
     } else {
@@ -63,7 +63,7 @@ object VerifyImage extends LazyLogging {
   /**
    * 脚本计算验证码
    */
-  def calc(exp: String) = {
+  def calc (exp: String) = {
     try {
       val manager = new ScriptEngineManager()
       val engine = manager.getEngineByName("JavaScript")
@@ -97,12 +97,12 @@ object VerifyImage extends LazyLogging {
   /**
    * 检查验证码表达式的值，成功就删除
    */
-  def checkVerifyCode(user: SeckillUser, goodsId: Long, verifyCode: Int) = {
+  def checkVerifyCode (user: SeckillUser, goodsId: Long, verifyCode: Int) = {
     if (VerifyEmpty.empty(user) || goodsId <= 0) {
       false
     } else {
       val codeOld = RedisService.get(SeckillKey.getSeckillVerifyCode, user.id + "," + goodsId, classOf[Int])
-      if (codeOld == null || codeOld - verifyCode != 0) {
+      if (codeOld - verifyCode != 0) {
         false
       } else {
         RedisService.delete(SeckillKey.getSeckillVerifyCode, user.id + "," + goodsId)

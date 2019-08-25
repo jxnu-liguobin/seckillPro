@@ -3,6 +3,7 @@ package io.github.dreamy.seckill
 import java.util.concurrent.CountDownLatch
 
 import com.google.inject.Guice
+import io.github.dreamy.seckill.database.RepositorySupport
 import io.github.dreamy.seckill.module.SeckillModule
 
 /**
@@ -14,12 +15,13 @@ import io.github.dreamy.seckill.module.SeckillModule
  */
 object SeckillServerStartUp extends App {
 
+  RepositorySupport.init()
   start()
 
   /**
    * 80端口可能出现Permission denied: connect
    */
-  def start(): Unit = {
+  def start (): Unit = {
     val c = new CountDownLatch(1)
     var server: SeckillServer = null
     try {
@@ -30,6 +32,7 @@ object SeckillServerStartUp extends App {
       c.await()
     } catch {
       case exception: Exception =>
+        exception.printStackTrace()
         c.countDown()
         server.shutdown()
     }

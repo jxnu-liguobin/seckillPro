@@ -1,6 +1,6 @@
 package io.github.dreamy.seckill.database
 
-import scalikejdbc.{ConnectionPool, DB, DBSession, _}
+import scalikejdbc.{ ConnectionPool, DB, DBSession, _ }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -14,20 +14,20 @@ import scala.concurrent.Future
  */
 trait RepositorySupport extends DataSourceSupport {
 
-  def readOnly[A](execution: DBSession => A): Future[A] = concurrent.Future {
+  def readOnly[A] (execution: DBSession => A): Future[A] = concurrent.Future {
     using(getDB) { db: DB =>
       db.readOnly((session: DBSession) => execution(session))
     }
   }
 
-  def localTx[A](execution: DBSession => A): Future[A] = concurrent.Future {
+  def localTx[A] (execution: DBSession => A): Future[A] = concurrent.Future {
     using(getDB) { db: DB =>
       db.localTx((session: DBSession) => execution(session))
     }
   }
 
   @deprecated
-  def localTxWithoutFuture[A](execution: DBSession => A): A =
+  def localTxWithoutFuture[A] (execution: DBSession => A): A =
     using(getDB) { db: DB =>
       db.localTx((session: DBSession) => execution(session))
     }
@@ -40,3 +40,5 @@ trait RepositorySupport extends DataSourceSupport {
 
   def getDB: DB = DB(ConnectionPool.get().borrow())
 }
+
+object RepositorySupport extends RepositorySupport
