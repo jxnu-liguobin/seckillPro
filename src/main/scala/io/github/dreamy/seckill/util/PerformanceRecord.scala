@@ -31,8 +31,8 @@ trait PerformanceRecord extends LazyLogging {
       val begin = System.currentTimeMillis()
       f.map { result =>
         val duration = System.currentTimeMillis() - begin
-        if (duration > durationLimit) logger.warn(s"slow invoked: [${invokeTag}] elapsed [${System.currentTimeMillis() - begin}].ms")
-        else logger.info(s"span time:[${System.currentTimeMillis() - begin} ms]")
+        if (duration > durationLimit) logger.warn(s"slow invoked: [${invokeTag}] elapsed [${System.currentTimeMillis() - begin} ms]")
+        else logger.info(s"invoked: [${invokeTag}] span time:[${System.currentTimeMillis() - begin} ms]")
         result
       }
     }
