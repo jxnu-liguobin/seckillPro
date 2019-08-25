@@ -32,7 +32,7 @@ object SeckillServiceTest extends BaseTest with App {
 
   def test_reset = {
     val goodsVo = GoodsDao.getGoodsVoByGoodsId(1).apply()
-    println(goodsVo)
+    println(goodsVo.get)
     val res = Await.result(SeckillService.reset(Seq(goodsVo.get)), Duration.Inf) //默认商品
     println("reset: " + res)
   }

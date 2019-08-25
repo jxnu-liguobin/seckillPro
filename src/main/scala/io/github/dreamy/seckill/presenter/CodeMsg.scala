@@ -94,7 +94,7 @@ object CodeMsg {
    */
   val ORDER_NOT_EXIST = CodeMsg(540, "订单不存在")
 
-  // 秒杀模块 5005XX
+  // 秒杀模块 55X
   /**
    * 商品已经秒杀完毕
    */
