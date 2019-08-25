@@ -6,6 +6,7 @@ import com.google.gson._
 import io.github.dreamy.seckill.entity.Goods
 import io.github.dreamy.seckill.presenter.GoodsVo
 import io.github.dreamy.seckill.util.ImplicitUtils
+import io.github.dreamy.seckill.util.ImplicitUtils._
 
 /**
  * 商品视图
@@ -49,8 +50,8 @@ class GoodsVoSerializer extends JsonSerializer[GoodsVo] with JsonDeserializer[Go
       ),
       jsonObject.get("seckillPrice").getAsDouble,
       jsonObject.get("stockCount").getAsInt,
-      ImplicitUtils.toLocalDateTime(Option(jsonObject.get("startDate").getAsLong)),
-      ImplicitUtils.toLocalDateTime(Option(jsonObject.get("endDate").getAsLong)))
+      Option(jsonObject.get("startDate").getAsLong),
+      Option(jsonObject.get("endDate").getAsLong))
   }
 }
 

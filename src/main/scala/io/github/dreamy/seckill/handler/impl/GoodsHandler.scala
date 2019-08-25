@@ -9,7 +9,7 @@ import io.github.dreamy.seckill.presenter.{ CodeMsg, GoodsDetailPresenter, Goods
 import io.github.dreamy.seckill.redis.RedisService
 import io.github.dreamy.seckill.redis.key.GoodsKey
 import io.github.dreamy.seckill.service.GoodsService
-import io.github.dreamy.seckill.util.{ ConditionUtils, ImplicitUtils, MD5Utils, VerifyEmpty }
+import io.github.dreamy.seckill.util.{ ConditionUtils, MD5Utils, VerifyEmpty }
 import io.undertow.server.HttpServerExchange
 import io.undertow.util.Methods
 import play.api.libs.json.Json
@@ -80,15 +80,14 @@ class GoodsHandler extends DefaultRestfulHandler {
         goodsVoOpt <- goodsFuture
         _ <- ConditionUtils.failCondition(goodsVoOpt.isEmpty, GlobalException(CodeMsg.SECKILL_OVER))
       } yield {
-        val startAt = ImplicitUtils.toLong(goodsVoOpt.get.startDate)
-        val endAt = ImplicitUtils.toLong(goodsVoOpt.get.endDate)
+        import io.github.dreamy.seckill.util.ImplicitUtils._
         val now = System.currentTimeMillis()
         var seckillStatus = 0
         var remainSeconds: Long = 0
-        if (now < startAt) { // 秒杀还没开始，倒计时
+        if (now < goodsVoOpt.get.startDate) { // 秒杀还没开始，倒计时
           seckillStatus = 0
-          remainSeconds = ((startAt - now) / 1000)
-        } else if (now > endAt) { // 秒杀已经结束
+          remainSeconds = ((goodsVoOpt.get.startDate - now) / 1000)
+        } else if (now > goodsVoOpt.get.endDate) { // 秒杀已经结束
           seckillStatus = 2
           remainSeconds = -1
         } else { // 秒杀进行中
