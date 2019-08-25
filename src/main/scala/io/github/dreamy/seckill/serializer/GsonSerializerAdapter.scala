@@ -19,6 +19,7 @@ object GsonSerializerAdapter {
   final lazy private val seckillOrder: Type = new TypeToken[SeckillOrder]() {}.getType
   final lazy private val seckillUser: Type = new TypeToken[SeckillUser]() {}.getType
   final lazy private val goodsVo: Type = new TypeToken[GoodsVo]() {}.getType
+
   final lazy private val gs = getGsonBuilder.
     registerTypeAdapter(seckillOrder, SeckillOrderSerialize).
     registerTypeAdapter(seckillUser, SeckillUserSerialize).

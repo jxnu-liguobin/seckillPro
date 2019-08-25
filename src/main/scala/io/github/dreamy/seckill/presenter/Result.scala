@@ -2,8 +2,6 @@ package io.github.dreamy.seckill.presenter
 
 import play.api.libs.json.{ JsNull, JsValue, Json, Writes }
 
-import scala.util.Try
-
 /**
  * 返回结果
  *
@@ -21,11 +19,27 @@ object Result {
 
   //对这个泛型类使用play-json转化为json，gson自定义实在麻烦，除了redis，能不用就不用
   implicit val writer: Writes[Result[_]] = (result: Result[_]) => {
-    Json.obj(
-      "code" -> result.code,
-      "msg" -> result.msg,
-      "data" -> Try(result.data.get).getOrElse(JsNull).asInstanceOf[JsValue] //JsNull error ?
-    )
+
+    //TODO
+    result.data.getOrElse("") match {
+      case ds: String =>
+        Json.obj(
+          "code" -> result.code,
+          "msg" -> result.msg,
+          "data" -> ds
+        )
+      case dj: JsValue =>
+        Json.obj(
+          "code" -> result.code,
+          "msg" -> result.msg,
+          "data" -> dj
+        )
+      case _ => Json.obj(
+        "code" -> result.code,
+        "msg" -> result.msg,
+        "data" -> JsNull
+      )
+    }
   }
 
 }

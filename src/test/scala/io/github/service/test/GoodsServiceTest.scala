@@ -2,6 +2,7 @@ package io.github.service.test
 
 import io.github.BaseTest
 import io.github.dreamy.seckill.service.GoodsService
+import play.api.libs.json.Json
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,7 +20,7 @@ object GoodsServiceTest extends BaseTest with App {
   println(goodsVo)
 
   val goodsVos = GoodsService.listGoodsVo
-  goodsVos.foreach(println)
+  Await.result(goodsVos.map(x => println("json:" + Json.toJson(x))), Duration.Inf)
 
   val c = GoodsService.reduceStock(goodsVo.get.copy(stockCount = 9))
   println(c)

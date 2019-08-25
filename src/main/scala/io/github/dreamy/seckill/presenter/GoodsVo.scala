@@ -20,7 +20,7 @@ case class GoodsVo (goods: Goods, seckillPrice: Double, stockCount: Int,
 
 object GoodsVo {
   implicit val writer: Writes[GoodsVo] = (goodsVo: GoodsVo) => {
-    val goodsV = Json.obj(
+    Json.obj(
       //含秒杀库存，秒杀价格，不显示实际总库存
       "id" -> MD5Utils.md5(goodsVo.goods.id.getOrElse(-1).toString),
       "goodsName" -> goodsVo.goods.goodsName,
@@ -33,9 +33,5 @@ object GoodsVo {
       "startDate" -> ImplicitUtils.toStr(goodsVo.startDate),
       "endDate" -> ImplicitUtils.toStr(goodsVo.endDate)
     )
-    Json.obj(
-      "goodsVo" -> goodsV
-    )
   }
-
 }
