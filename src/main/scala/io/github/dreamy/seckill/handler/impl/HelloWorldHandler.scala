@@ -37,6 +37,6 @@ class HelloWorldHandler extends RestfulHandler with RoutingHandler {
       val mockSeckillUser = SeckillUser(Option(15312345678L), "user",
         MD5Utils.inputPassToDbPass("123456", "1a2b3c"), "1a2b3c", "", 1)
       mockSeckillUser
-    }
+    }.elapsed("测试hello")
   }
 }

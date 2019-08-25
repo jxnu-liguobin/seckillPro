@@ -5,6 +5,7 @@ import java.util.concurrent.{ Executor, Executors }
 
 import com.typesafe.scalalogging.LazyLogging
 import io.github.dreamy.seckill.concurrent.Executable
+import io.github.dreamy.seckill.util.PerformanceRecord
 import io.undertow.security.api.AuthenticationMechanism.AuthenticationMechanismOutcome
 import io.undertow.server.{ HttpHandler, HttpServerExchange }
 import io.undertow.util.Methods._
@@ -22,7 +23,7 @@ import scala.runtime.BoxedUnit
  * @time 2019-08-18
  * @version v1.0
  */
-trait RestfulHandler extends HttpHandler with Executable with LazyLogging {
+trait RestfulHandler extends HttpHandler with PerformanceRecord with Executable with LazyLogging {
 
   private[this] lazy val contentType = "application/json;charset=utf-8"
   private[this] implicit lazy val ec: ExecutionContext = ExecutionContext.fromExecutor(workers)
