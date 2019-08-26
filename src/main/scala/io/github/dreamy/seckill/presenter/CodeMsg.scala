@@ -86,6 +86,9 @@ object CodeMsg {
    */
   val PASSWORD_ERROR = CodeMsg(525, "密码错误")
 
+  //id转化失败
+  val HASH_ERROR = CodeMsg(526, "无效的ID")
+
   // 商品模块 53X
 
   // 订单模块 54X

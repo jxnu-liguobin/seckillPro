@@ -33,11 +33,11 @@ object OrderDaoTest extends BaseTest with App {
 
   println("===================deleteOrders======================")
   val deleteOrdersRes = OrderDao.deleteOrders()
-  println(deleteOrdersRes)
+  println(deleteOrdersRes.apply)
 
   println("===================deleteSeckillaOrders======================")
   val deleteSeckillaOrdersRes = OrderDao.deleteSeckillaOrders()
-  println(deleteSeckillaOrdersRes)
+  println(deleteSeckillaOrdersRes.apply())
 
 
 }

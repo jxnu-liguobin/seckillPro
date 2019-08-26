@@ -5,7 +5,7 @@ import java.lang.reflect.Type
 import com.google.gson._
 import io.github.dreamy.seckill.entity.Goods
 import io.github.dreamy.seckill.presenter.GoodsVo
-import io.github.dreamy.seckill.util.ImplicitUtils
+import io.github.dreamy.seckill.util.CustomConversions._
 
 /**
  * 商品视图
@@ -20,7 +20,7 @@ class GoodsVoSerializer extends JsonSerializer[GoodsVo] with JsonDeserializer[Go
   override def serialize (src: GoodsVo, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = {
     val goods = new JsonObject
     //getOrElse后无法推断类型了，bug
-    goods.addProperty("id", src.goods.id.getOrElse(-1).asInstanceOf[Number])
+    goods.addProperty("id", src.goods.id.getOrElse(-1L))
     goods.addProperty("goodsName", src.goods.goodsName)
     goods.addProperty("goodsTitle", src.goods.goodsTitle)
     goods.addProperty("goodsImg", src.goods.goodsImg)
@@ -31,8 +31,8 @@ class GoodsVoSerializer extends JsonSerializer[GoodsVo] with JsonDeserializer[Go
     goodsVo.add("goods", goods)
     goodsVo.addProperty("seckillPrice", src.seckillPrice)
     goodsVo.addProperty("stockCount", src.stockCount)
-    goodsVo.addProperty("startDate", ImplicitUtils.toLong(src.startDate))
-    goodsVo.addProperty("endDate", ImplicitUtils.toLong(src.endDate))
+    goodsVo.addProperty("startDate", src.startDate.toLong)
+    goodsVo.addProperty("endDate", src.endDate.toLong)
     goodsVo
   }
 
@@ -65,8 +65,8 @@ class GoodsVoSerializer extends JsonSerializer[GoodsVo] with JsonDeserializer[Go
       ),
       jsonObject.get("seckillPrice").getAsDouble,
       jsonObject.get("stockCount").getAsInt,
-      ImplicitUtils.toLocalDateTime(Option(jsonObject.get("startDate").getAsLong)),
-      ImplicitUtils.toLocalDateTime(Option(jsonObject.get("endDate").getAsLong)))
+      Option(jsonObject.get("startDate").getAsLong).toLocalDateTimeOpt,
+      Option(jsonObject.get("endDate").getAsLong).toLocalDateTimeOpt)
   }
 }
 

@@ -26,5 +26,6 @@ libraryDependencies ++= Seq(
   "com.lmax" % "disruptor" % "3.4.2",
   "com.google.guava" % "guava" % "23.0",
   "io.undertow" % "undertow-core" % "2.0.24.Final",
-  "com.google.inject" % "guice" % "4.2.2"
+  "com.google.inject" % "guice" % "4.2.2",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.9"
 )

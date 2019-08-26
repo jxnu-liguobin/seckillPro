@@ -1,7 +1,8 @@
 package io.github.dreamy.seckill.presenter
 
 import io.github.dreamy.seckill.entity.SeckillUser
-import io.github.dreamy.seckill.util.{ ImplicitUtils, MD5Utils }
+import io.github.dreamy.seckill.util.CustomConversions._
+import io.github.dreamy.seckill.util.MD5Utils
 import play.api.libs.json.{ Json, Writes }
 
 /**
@@ -44,7 +45,7 @@ object GoodsDetailPresenter {
       "id" -> MD5Utils.md5(goodsDetailPresenter.user.id.getOrElse(-1L).toString),
       "nickname" -> goodsDetailPresenter.user.nickname,
       "head" -> goodsDetailPresenter.user.head,
-      "lastLoginDate" -> ImplicitUtils.toStr(goodsDetailPresenter.user.lastLoginDate))
+      "lastLoginDate" -> goodsDetailPresenter.user.lastLoginDate.toStrOpt)
 
     val goodsVo = Json.obj(
       //含秒杀库存，秒杀价格，不显示实际总库存
@@ -56,8 +57,8 @@ object GoodsDetailPresenter {
       "goodsPrice" -> goodsDetailPresenter.goodsVo.goods.goodsPrice,
       "stockCount" -> goodsDetailPresenter.goodsVo.stockCount,
       "seckillPrice" -> goodsDetailPresenter.goodsVo.seckillPrice,
-      "startDate" -> ImplicitUtils.toStr(goodsDetailPresenter.goodsVo.startDate),
-      "endDate" -> ImplicitUtils.toStr(goodsDetailPresenter.goodsVo.endDate)
+      "startDate" -> goodsDetailPresenter.goodsVo.startDate.toStrOpt,
+      "endDate" -> goodsDetailPresenter.goodsVo.endDate.toStrOpt
     )
 
     Json.obj(
