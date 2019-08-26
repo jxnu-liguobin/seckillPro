@@ -13,8 +13,6 @@ import io.github.dreamy.seckill.util.DateUtils.{ localDateTimeToLong, localDateT
  */
 object CustomConversions {
 
-  type F <: Any
-
   import java.time.LocalDateTime
 
   implicit class LocalDateTimeOpt2StringOPt (localDateTime: Option[LocalDateTime]) {
