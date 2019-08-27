@@ -61,7 +61,7 @@ class GoodsHandler extends DefaultRestfulHandler {
           for {
             goodsVoList <- GoodsService.listGoodsVo()
           } yield {
-            RedisService.set(GoodsKey.getGoodsList, "", goodsVoList.sortBy(x => x.goods.id.get).asJava)
+            RedisService.set(GoodsKey.getGoodsList, "", goodsVoList.asJava)
             Json.toJson(Result.success(Json.toJson(goodsVoList)))
           }
       }
