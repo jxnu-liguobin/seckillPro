@@ -23,7 +23,7 @@ import scala.util.Try
 
 
 /**
- * 商品控制器，有点复杂，未完成测试（you dian luan）
+ * 商品控制器，有点复杂，未完全测试（you dian luan）
  *
  * @author 梦境迷离
  * @since 2019-08-25
@@ -35,9 +35,10 @@ class GoodsHandler extends DefaultRestfulHandler {
 
   override def methods: Set[String] = single(Methods.GET_STRING)
 
-  override def get (exchange: HttpServerExchange): Future[Any] = {
+  //TODO 对于J送接口，有没有必要再使用Result需要考虑。
+  override def get(exchange: HttpServerExchange): Future[Any] = {
     //TODO handler的逻辑多了
-    def list () = {
+    def list() = {
       //TODO session 有问题，目前仅使用 mock user 走逻辑
       //      val sm = exchange.getAttachment(SessionManager.ATTACHMENT_KEY);
       //      val sessionConfig = exchange.getAttachment(SessionConfig.ATTACHMENT_KEY);
@@ -67,7 +68,7 @@ class GoodsHandler extends DefaultRestfulHandler {
       }
     }
 
-    def detail () = {
+    def detail() = {
       val goodsIdStr = exchange.getQueryParameters.getOrDefault("goodsId", new LinkedBlockingDeque[String]() {
         "-1"
       }).getFirst
