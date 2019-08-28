@@ -1,7 +1,6 @@
 package io.github.dreamy.seckill.handler.impl
 
 import java.util
-import java.util.concurrent.LinkedBlockingDeque
 
 import io.github.dreamy.seckill.entity.SeckillUser
 import io.github.dreamy.seckill.exception.GlobalException
@@ -69,9 +68,7 @@ class GoodsHandler extends DefaultRestfulHandler {
     }
 
     def detail() = {
-      val goodsIdStr = exchange.getQueryParameters.getOrDefault("goodsId", new LinkedBlockingDeque[String]() {
-        "-1"
-      }).getFirst
+      val goodsIdStr = Try(exchange.getQueryParameters.get("goodsId").getFirst).getOrElse("-1")
       //不加L无法推断类型
       val goodsId = Try(goodsIdStr.toLong).getOrElse(-1L)
       //      val sm = exchange.getAttachment(SessionManager.ATTACHMENT_KEY);
@@ -103,9 +100,7 @@ class GoodsHandler extends DefaultRestfulHandler {
       }
     }
 
-    exchange.getQueryParameters.getOrDefault("type", new LinkedBlockingDeque[String]() {
-      "list"
-    }).getFirst match {
+    Try(exchange.getQueryParameters.get("type").getFirst).getOrElse("list") match {
       case "list" => list().elapsed("查询商品列表")
       case "detail" => detail().elapsed("查询单个商品详情")
     }

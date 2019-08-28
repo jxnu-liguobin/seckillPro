@@ -5,7 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import com.google.inject.Injector
 import com.typesafe.scalalogging.LazyLogging
 import io.github.dreamy.seckill.config.ConfigLoader
-import io.github.dreamy.seckill.http.{ AccessLogHandler, Routes }
+import io.github.dreamy.seckill.http.{ AccessLogHandler, Routes, SessionBuilder }
+import io.undertow.server.handlers.form.EagerFormParsingHandler
 import io.undertow.server.{ HttpHandler, RoutingHandler }
 import io.undertow.{ Undertow, UndertowOptions }
 
@@ -32,8 +33,11 @@ class SeckillServer(injector: Injector) extends LazyLogging {
     if (started.compareAndSet(false, true)) {
       val handler = new RoutingHandler()
       handlers.foreach { routing: http.RoutingHandler =>
+        val routingHandler = routing.asInstanceOf[HttpHandler]
         routing.methods.foreach { method =>
-          handler.add(method, routing.route, AccessLogHandler(routing.asInstanceOf[HttpHandler], name))
+          //巨坑，这个表单解析处理器需要在session之后
+          handler.add(method, routing.route, AccessLogHandler(routingHandler, name))
+          handler.add(method, routing.route, SessionBuilder.sessionManagerBuild(routingHandler).setNext(new EagerFormParsingHandler(routingHandler)))
         }
       }
       val builder = Undertow.builder()

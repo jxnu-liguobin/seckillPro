@@ -4,6 +4,7 @@ import io.github.dreamy.seckill.dao.SeckillUserDao
 import io.github.dreamy.seckill.database.RepositorySupport
 import io.github.dreamy.seckill.entity.SeckillUser
 import io.github.dreamy.seckill.exception.GlobalException
+import io.github.dreamy.seckill.http.SessionBuilder
 import io.github.dreamy.seckill.presenter.{ CodeMsg, LoginVo }
 import io.github.dreamy.seckill.redis.RedisService
 import io.github.dreamy.seckill.redis.key.SeckillUserKey
@@ -59,7 +60,7 @@ trait SeckillUserServiceComponent extends RepositorySupport {
     RedisService.set(SeckillUserKey.token, token, user)
     val cookie = new CookieImpl(SeckillUserService.COOKI_NAME_TOKEN, token)
     //TODO 成功设置到浏览器
-    cookie.setMaxAge(SeckillUserKey.token.expireSeconds())
+    cookie.setMaxAge(60 * 60 * 24 * 7)
     cookie.setPath("/")
     //TODO 未验证是否需要在service层返回HttpServerExchange对象
     exchange.setResponseCookie(cookie)
@@ -71,18 +72,19 @@ trait SeckillUserServiceComponent extends RepositorySupport {
   def login(exchange: HttpServerExchange, loginVo: LoginVo) = {
     localTx { implicit session =>
       if (VerifyEmpty.empty(loginVo)) throw GlobalException(CodeMsg.SERVER_ERROR)
-      val mobile = loginVo.mobile
-      val formPass = loginVo.password
       // 判断手机号是否存在
-      val user = getById(mobile.toLong)
+      val user = getById(loginVo.mobile.toLong)
       if (VerifyEmpty.empty(user)) throw GlobalException(CodeMsg.MOBILE_NOT_EXIST)
+      val sessionCustom = SessionBuilder.getOrCreateSession(exchange)
+      val token = UUIDUtils.uuid
+      logger.info(s"session-id-login: ${sessionCustom.getId}")
+      sessionCustom.setAttribute(token, user)
       // 验证密码
       val dbPass = user.password
       val saltDB = user.salt
-      val calcPass = MD5Utils.formPassToDBPass(formPass, saltDB)
+      val calcPass = MD5Utils.formPassToDBPass(loginVo.password, saltDB)
       if (!calcPass.equals(dbPass)) throw GlobalException(CodeMsg.PASSWORD_ERROR)
       // 生成cookie
-      val token = UUIDUtils.uuid
       addCookie(exchange, token, user)
       token
     }
@@ -92,13 +94,13 @@ trait SeckillUserServiceComponent extends RepositorySupport {
   /**
    * 根据token获取用户信息
    */
-  def getByToken(exchange: HttpServerExchange, token: String): SeckillUser = {
-    if (VerifyEmpty.empty(token)) null
+  def getByToken(exchange: HttpServerExchange, token: String) = {
+    if (VerifyEmpty.empty(token)) None
     else {
       val user = RedisService.get(SeckillUserKey.token, token, classOf[SeckillUser])
       // 延长有效期
       if (VerifyEmpty.noEmpty(user)) addCookie(exchange, token, user)
-      user
+      Option(user)
     }
   }
 
