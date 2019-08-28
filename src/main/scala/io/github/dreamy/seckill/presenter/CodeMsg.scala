@@ -14,7 +14,7 @@ case class CodeMsg private(code: Int, msg: String) {
   /**
    * 参数格式化
    */
-  def fillArgs (args: AnyRef*): CodeMsg = {
+  def fillArgs(args: AnyRef*): CodeMsg = {
     val code = this.code
     val message = String.format(this.msg, args)
     new CodeMsg(code, message)
@@ -35,6 +35,11 @@ object CodeMsg {
    */
   val SUCCESS = CodeMsg(0, "success")
 
+
+  /**
+   * token无效
+   */
+  val TOKEN_ERROR = CodeMsg(509, "无效的token")
   /**
    * 服务端异常
    */

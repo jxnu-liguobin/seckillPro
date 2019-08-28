@@ -1,7 +1,9 @@
 package io.github.dreamy.seckill.handler.impl
 
+import io.github.dreamy.seckill.entity.SeckillUser
+import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.http.{ DefaultRestfulHandler, SessionBuilder }
-import io.github.dreamy.seckill.presenter.{ LoginVo, Result }
+import io.github.dreamy.seckill.presenter.{ CodeMsg, LoginVo, Result }
 import io.github.dreamy.seckill.service.SeckillUserService
 import io.github.dreamy.seckill.util.VerifyEmpty
 import io.undertow.server.HttpServerExchange
@@ -11,6 +13,7 @@ import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Try
 
 
 /**
@@ -35,13 +38,19 @@ class LoginHandler extends DefaultRestfulHandler {
     val session = SessionBuilder.getOrCreateSession(exchange)
     logger.info(s"session-id-request: ${session.getId}")
     //携带cookie的请求会校验token是否有效，有效的获取到用户信息，并刷新session中的token-user，反回token（反回token只是用于测试）
-    val cookie = exchange.getRequestCookies
-    val token = cookie.get(SeckillUserService.COOKI_NAME_TOKEN).getValue
+    val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")
     if (VerifyEmpty.noEmpty(token)) {
       logger.info(s"token: ${token}")
-      val u = SeckillUserService.getByToken(exchange, token).get
-      session.setAttribute(token, u)
-      Future.successful(Json.toJson(Result.success(token))) //TODO目前不考虑token刷新
+      val sessionUser = session.getAttribute(token).asInstanceOf[SeckillUser]
+      if (VerifyEmpty.noEmpty(sessionUser)) {
+        Future.successful(Json.toJson(Result.success(token))) //TODO目前不考虑token刷新
+      } else {
+        SeckillUserService.getByToken(exchange, token) match {
+          case Some(user) => session.setAttribute(token, user)
+            Future.successful(Json.toJson(Result.success(token))) //TODO目前不考虑token刷新
+          case None => throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
+        }
+      }
     }
     else {
       val loginVo2 = exchange.getAttachment(FormDataParser.FORM_DATA)
