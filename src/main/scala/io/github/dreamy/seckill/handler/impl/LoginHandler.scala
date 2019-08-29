@@ -26,16 +26,24 @@ import scala.util.Try
 class LoginHandler extends DefaultRestfulHandler {
   override def route: String = "/login"
 
-  override def methods: Set[String] = single(Methods.POST_STRING)
+  override def methods: Set[String] = multi(Methods.POST_STRING, Methods.GET_STRING)
+
+  override def get(exchange: HttpServerExchange): Future[Any] = {
+    Future {
+      Json.toJson(Result.success("登录页面"))
+    }.elapsed("模拟打开登录页面")
+  }
 
   /**
    * 携带的token直接反回，否则登录，生成新token，会覆盖原有cookie中的token
+   *
+   * cookie和redis都是7天，session是基于memory，目前没有使用redis
    *
    * @param exchange
    * @return
    */
   override def post(exchange: HttpServerExchange): Future[Any] = {
-    val session = SessionBuilder.getOrCreateSession(exchange)
+    val session = SessionBuilder.getNewSession(exchange)
     logger.info(s"session-id-request: ${session.getId}")
     //携带cookie的请求会校验token是否有效，有效的获取到用户信息，并刷新session中的token-user，反回token（反回token只是用于测试）
     val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")

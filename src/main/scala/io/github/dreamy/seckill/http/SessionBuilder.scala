@@ -18,13 +18,24 @@ object SessionBuilder {
    * @param exchange
    * @return
    */
-  def getOrCreateSession(exchange: HttpServerExchange): Session = {
+  def getNewSession(exchange: HttpServerExchange) = {
     val sessionManager: SessionManager = exchange.getAttachment(SessionManager.ATTACHMENT_KEY)
     val sessionConfig: SessionConfig = exchange.getAttachment(SessionConfig.ATTACHMENT_KEY)
     if (sessionManager == null) throw UndertowMessages.MESSAGES.sessionManagerNotFound
-    var session: Session = sessionManager.getSession(exchange, sessionConfig)
-    if (session == null) session = sessionManager.createSession(exchange, sessionConfig)
-    session
+    sessionManager.createSession(exchange, sessionConfig)
+  }
+
+  /**
+   * 获取session
+   *
+   * @param exchange
+   * @return
+   */
+  def getSession(exchange: HttpServerExchange) = {
+    val sessionManager: SessionManager = exchange.getAttachment(SessionManager.ATTACHMENT_KEY)
+    val sessionConfig: SessionConfig = exchange.getAttachment(SessionConfig.ATTACHMENT_KEY)
+    if (sessionManager == null) throw UndertowMessages.MESSAGES.sessionManagerNotFound
+    Option(sessionManager.getSession(exchange, sessionConfig))
   }
 
   /**
