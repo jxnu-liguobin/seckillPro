@@ -12,6 +12,7 @@ import com.typesafe.scalalogging.LazyLogging
 object SeckillMessageConsumer extends EventHandler[SeckillMessage] with LazyLogging {
   override def onEvent(seckillEvent: SeckillMessage, l: Long, b: Boolean): Unit = {
     logger.info(s"receive SeckillMessage, consumer: [$seckillEvent]")
+    //TODO 这里可以在异步中执行？
     SeckillServiceHandlerImpl.newInstance.startSeckil(seckillEvent.goodsId, seckillEvent.seckillUser)
   }
 }
