@@ -41,16 +41,11 @@ Others Version
 7. 该版本是在入职Scala开发工程师三个月时写的，可能后续会出Scala第三版，通过对比1.0 Scala版本，可以大致知道新手的Scala编程演变，因为第一版是自学时
 8. 不要拘泥于具体业务，本项目只为了熟练掌握Scala初中级函数式特性
 
-#### 主要技术
+#### 环境
 
-* scala 2.12.8
-* java 8
-* undertow 2.0.24.Final
-* mysql 5.6
-* scalikejdbc 3.3.+ 
-* disruptor 3.4.2
-* redis 2.9.0 (jedis)
-* akka 暂未用
+- Scala 2.12.x
+- Java 8
+- Sbt 1.2.8
 
 #### 使用
 
