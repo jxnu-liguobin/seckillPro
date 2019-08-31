@@ -21,7 +21,7 @@ object OrderDetailPresenter {
     val orderInfoObj = Json.obj(
       "id" -> orderInfo.id.toHashOpt,
       "userId" -> orderInfo.userId.toHashOpt,
-      "goodsId" -> orderInfo.goodsId.toHashOpt,
+      "goodsId" -> orderInfo.goodsId.getOrElse(-1L).asInstanceOf[Double].toHash, //兼容目前GoodsVo的问题
       "deliveryAddrId" -> orderInfo.deliveryAddrId.toHashOpt,
       "goodsName" -> orderInfo.goodsName,
       "goodsCount" -> orderInfo.goodsCount, //秒杀默认商品数量是1
