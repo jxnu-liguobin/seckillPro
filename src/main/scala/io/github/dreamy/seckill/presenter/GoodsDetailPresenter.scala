@@ -4,6 +4,7 @@ import io.github.dreamy.seckill.entity.SeckillUser
 import io.github.dreamy.seckill.util.CustomConversions._
 import io.github.dreamy.seckill.util.MD5Utils
 import play.api.libs.json.{ Json, Writes }
+import io.github.dreamy.seckill.util.CustomConversions._
 
 /**
  * 商品详情
@@ -42,14 +43,14 @@ object GoodsDetailPresenter {
 
     val user = Json.obj(
       //不显示密码和盐，注册时间
-      "id" -> MD5Utils.md5(goodsDetailPresenter.user.id.getOrElse(-1L).toString),
+      "id" -> goodsDetailPresenter.user.id.toHashOpt,
       "nickname" -> goodsDetailPresenter.user.nickname,
       "head" -> goodsDetailPresenter.user.head,
       "lastLoginDate" -> goodsDetailPresenter.user.lastLoginDate.toStrOpt)
 
     val goodsVo = Json.obj(
       //含秒杀库存，秒杀价格，不显示实际总库存
-      "id" -> MD5Utils.md5(goodsDetailPresenter.goodsVo.goods.id.getOrElse(-1).toString),
+      "id" -> goodsDetailPresenter.goodsVo.goods.id.toHashOpt,
       "goodsName" -> goodsDetailPresenter.goodsVo.goods.goodsName,
       "goodsTitle" -> goodsDetailPresenter.goodsVo.goods.goodsTitle,
       "goodsImg" -> goodsDetailPresenter.goodsVo.goods.goodsImg,

@@ -35,7 +35,8 @@ class SeckillServer(injector: Injector) extends LazyLogging {
       handlers.foreach { routing: http.RoutingHandler =>
         val routingHandler = routing.asInstanceOf[HttpHandler]
         routing.methods.foreach { method =>
-          //巨坑，这个表单解析处理器需要在session之后
+          //巨坑，这个表单解析处理器需要在session之后，并且需要传入router handler
+          //session Manager,formData,path,session cookie,formDataParser
           handler.add(method, routing.route, AccessLogHandler(routingHandler, name))
           handler.add(method, routing.route, SessionBuilder.sessionManagerBuild(routingHandler).setNext(new EagerFormParsingHandler(routingHandler)))
         }

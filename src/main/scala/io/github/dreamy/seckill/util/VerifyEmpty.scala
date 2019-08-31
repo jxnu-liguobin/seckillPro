@@ -13,6 +13,8 @@ object VerifyEmpty {
 
   def empty(string: Option[String]) = if (string.isEmpty || string.getOrElse("").equals("")) true else false
 
+  def noEmpty(string: String) = if (string != null && string != "") true else false
+
   def empty(obj: AnyRef) = if (obj == null) true else false
 
   def noEmpty(obj: AnyRef) = if (obj != null) true else false

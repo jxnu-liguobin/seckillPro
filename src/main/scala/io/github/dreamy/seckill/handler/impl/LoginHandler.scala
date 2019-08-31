@@ -3,13 +3,11 @@ package io.github.dreamy.seckill.handler.impl
 import io.github.dreamy.seckill.entity.SeckillUser
 import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.http.{ DefaultRestfulHandler, SessionBuilder }
-import io.github.dreamy.seckill.presenter.{ CodeMsg, LoginVo, Result }
+import io.github.dreamy.seckill.presenter.{ CodeMsg, LoginVo }
 import io.github.dreamy.seckill.service.SeckillUserService
 import io.github.dreamy.seckill.util.VerifyEmpty
 import io.undertow.server.HttpServerExchange
-import io.undertow.server.handlers.form.FormDataParser
 import io.undertow.util.Methods
-import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -30,7 +28,7 @@ class LoginHandler extends DefaultRestfulHandler {
 
   override def get(exchange: HttpServerExchange): Future[Any] = {
     Future {
-      Json.toJson(Result.success("登录页面"))
+      result("登录页面")
     }.elapsed("模拟打开登录页面")
   }
 
@@ -51,21 +49,26 @@ class LoginHandler extends DefaultRestfulHandler {
       logger.info(s"token: ${token}")
       val sessionUser = session.getAttribute(token).asInstanceOf[SeckillUser]
       if (VerifyEmpty.noEmpty(sessionUser)) {
-        Future.successful(Json.toJson(Result.success(token))) //TODO目前不考虑token刷新
+        session.setAttribute(token, sessionUser)
+        Future.successful(result(token))
       } else {
+        //redis token 30天，cookie token 7天，cookie JSESSIONID 30分钟，session 30分钟
+        //登录成功会刷新cookie中的JSESSIONID、token和redis中的token的过期时间，其中JSESSIONID与session过期时间一致
+        //当cookie中的token还没有过期，但是session的cookie过期了，则会查redis，若redis的过期了但是token却没有过期，则认为是错误的token
         SeckillUserService.getByToken(exchange, token) match {
           case Some(user) => session.setAttribute(token, user)
-            Future.successful(Json.toJson(Result.success(token))) //TODO目前不考虑token刷新
-          case None => throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
+            Future.successful(result(token))
+          case None =>
+            session.invalidate(exchange)
+            throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
         }
       }
     }
     else {
-      val loginVo2 = exchange.getAttachment(FormDataParser.FORM_DATA)
-      val loginVo = LoginVo(loginVo2.get("mobile").getFirst.getValue, loginVo2.get("password").getFirst.getValue)
+      val loginVo = LoginVo(getFormDataByName(exchange, "mobile"), getFormDataByName(exchange, "password"))
       //使用raw或form-data提交得到的是LinkedHashMap，value是Dueue
       SeckillUserService.login(exchange, loginVo).map { token =>
-        Json.toJson(Result.success(token))
+        result(token)
       }.elapsed("模拟用户登录表单提交")
     }
   }

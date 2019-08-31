@@ -6,16 +6,17 @@ import io.github.dreamy.seckill.entity.SeckillUser
 import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.http.{ DefaultRestfulHandler, SessionBuilder }
 import io.github.dreamy.seckill.presenter.GoodsVo._
-import io.github.dreamy.seckill.presenter.{ CodeMsg, GoodsDetailPresenter, GoodsVo, Result }
+import io.github.dreamy.seckill.presenter.{ CodeMsg, GoodsDetailPresenter, GoodsVo }
 import io.github.dreamy.seckill.redis.RedisService
 import io.github.dreamy.seckill.redis.key.GoodsKey
-import io.github.dreamy.seckill.service.GoodsService
+import io.github.dreamy.seckill.service.{ GoodsService, SeckillUserService }
 import io.github.dreamy.seckill.util.CustomConversions._
 import io.github.dreamy.seckill.util.{ ConditionUtils, VerifyEmpty }
 import io.undertow.server.HttpServerExchange
 import io.undertow.util.Methods
 import play.api.libs.json.Json
 
+import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Try
@@ -36,43 +37,64 @@ class GoodsHandler extends DefaultRestfulHandler {
 
   //TODO 对于秒杀的所有接口，有没有必要再使用Result需要考虑。
   override def get(exchange: HttpServerExchange): Future[Any] = {
-    val sessionNotFound = Future {
-      Json.toJson(Result.error(CodeMsg.SESSION_ERROR))
-    }
-
     //TODO handler的逻辑多了
     def list() = {
-      import scala.collection.JavaConverters._
       SessionBuilder.getSession(exchange) match {
         case Some(session) =>
+          logger.info(s"session-id-list: ${session.getId}")
           val goodsVos = RedisService.get(GoodsKey.getGoodsList, "", classOf[util.LinkedList[GoodsVo]])
-          val user = session.getAttribute("user").asInstanceOf[SeckillUser]
-          logger.info("list invoke, user: " + user)
-          (goodsVos, user) match {
-            case (_, u) if VerifyEmpty.empty(u) => sessionNotFound
-            case (g, u) if !VerifyEmpty.oneEmpty(Seq(g, u): _*) => Future {
-              Json.toJson(Result.success(Json.toJson(toJsonObjSeq(goodsVos))))
+          val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")
+          val sessionUser = session.getAttribute(token).asInstanceOf[SeckillUser]
+          val user = if (sessionUser != null) {
+            session.setAttribute(token, sessionUser)
+            sessionUser
+          }
+          else {
+            SeckillUserService.getByToken(exchange, token) match {
+              case Some(u) => session.setAttribute(token, u)
+                u
+              case None =>
+                session.invalidate(exchange)
+                throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
             }
-            case (g, u) if VerifyEmpty.empty(g) && VerifyEmpty.noEmpty(u) =>
+          }
+          logger.info(s"current user: ${user}")
+          goodsVos match {
+            case g if VerifyEmpty.noEmpty(g) => Future {
+              result(Json.toJson(toJsonObjSeq(goodsVos)))
+            }
+            case g if VerifyEmpty.empty(g) =>
               for {
                 goodsVoList <- GoodsService.listGoodsVo()
               } yield {
                 RedisService.set(GoodsKey.getGoodsList, "", goodsVoList.asJava)
-                Json.toJson(Result.success(Json.toJson(goodsVoList)))
+                result(Json.toJson(goodsVoList))
               }
           }
-        case None => sessionNotFound
       }
     }
 
     def detail() = {
-      val goodsIdStr = Try(exchange.getQueryParameters.get("goodsId").getFirst).getOrElse("-1")
+      val goodsIdStr = getQueryParamValue(exchange, "goodsId").getOrElse("-1")
       //不加L无法推断类型
       val goodsId = Try(goodsIdStr.toLong).getOrElse(-1L)
       SessionBuilder.getSession(exchange) match {
         case Some(session) =>
-          val user = session.getAttribute("user").asInstanceOf[SeckillUser]
-          logger.info("detail invoke, user: " + user)
+          val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")
+          val sessionUser = session.getAttribute(token).asInstanceOf[SeckillUser]
+          val user = if (sessionUser != null) {
+            session.setAttribute(token, sessionUser)
+            sessionUser
+          }
+          else {
+            SeckillUserService.getByToken(exchange, token) match {
+              case Some(u) => session.setAttribute(token, u)
+                u
+              case None =>
+                session.invalidate(exchange)
+                throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
+            }
+          }
           val goodsFuture = GoodsService.getGoodsVoByGoodsId(goodsId)
           for {
             goodsVoOpt <- goodsFuture
@@ -92,15 +114,16 @@ class GoodsHandler extends DefaultRestfulHandler {
               remainSeconds = 0
             }
             //泛型的play-json没搞懂，直接转化后再赋值
-            Json.toJson(Result.success(Json.toJson(GoodsDetailPresenter(seckillStatus, remainSeconds, goodsVoOpt.get, user))))
+            result(Json.toJson(GoodsDetailPresenter(seckillStatus, remainSeconds, goodsVoOpt.get, user)))
           }
         case None => sessionNotFound
       }
     }
 
-    Try(exchange.getQueryParameters.get("type").getFirst).getOrElse("list") match {
-      case "list" => list().elapsed("查询商品列表")
-      case "detail" => detail().elapsed("查询单个商品详情")
+    getQueryParamValue(exchange, "type") match {
+      case Some("list") => list().elapsed("查询商品列表")
+      case Some("detail") => detail().elapsed("查询单个商品详情")
+      case _ => Future.successful(result("不支持的查询操作")).elapsed("非法请求")
     }
   }
 }

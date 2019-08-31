@@ -52,8 +52,12 @@ trait OrderServiceComponent extends RepositorySupport {
   /**
    * 根据订单id查询订单信息
    */
-  def getOrderById(orderId: Long)(implicit session: DBSession = getReadOnlySession) =
-    OrderDao.getOrderById(orderId).apply()
+  def getOrderById(orderId: Long)(implicit session: DBSession = getReadOnlySession) = {
+    localTx {
+      implicit session =>
+        OrderDao.getOrderById(orderId).apply()
+    }
+  }
 
   /**
    * 删除订单

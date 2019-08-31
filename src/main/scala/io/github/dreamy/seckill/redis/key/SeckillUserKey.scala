@@ -14,7 +14,7 @@ class SeckillUserKey private(expireSe: Integer, var prefix: String) extends Base
 object SeckillUserKey {
 
   //用户登陆token过期时间
-  final val TOKEN_EXPIRE = 3600 * 24 * 7
+  final val TOKEN_EXPIRE = 3600 * 24 * 30
 
   //用户登陆token前缀
   final val token = new SeckillUserKey(TOKEN_EXPIRE, "tk")

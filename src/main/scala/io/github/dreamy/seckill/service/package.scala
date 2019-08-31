@@ -10,7 +10,7 @@ package io.github.dreamy.seckill
 package object service {
 
   /**
-   * 所以需要事务处理的地方，子操作需要同步执行。
+   * 所以需要事务处理的地方，子操作需要同步执行。没有使用隐式session对象的（localTx方法），不能直接在handler调用
    * {{{
    *   Future {
    *    //这里需要同步执行

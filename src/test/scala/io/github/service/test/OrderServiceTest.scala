@@ -29,7 +29,7 @@ object OrderServiceTest extends BaseTest with App {
     MD5Utils.inputPassToDbPass("123456", "1a2b3c"), "1a2b3c", "", 1), goodsVo.get)
   println(createOrder)
 
-  val order = OrderService.getOrderById(1)
+  val order = Await.result(OrderService.getOrderById(1), Duration.Inf)
   println(order)
 
 }
