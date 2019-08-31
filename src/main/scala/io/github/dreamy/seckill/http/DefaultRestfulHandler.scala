@@ -37,6 +37,7 @@ abstract class DefaultRestfulHandler extends RestfulHandler with RoutingHandler 
     result.toString.getBytes(Constant.default_chartset)
   }
 
+  @deprecated
   def sessionNotFound = Future {
     Json.toJson(Result.error(CodeMsg.SESSION_ERROR))
   }

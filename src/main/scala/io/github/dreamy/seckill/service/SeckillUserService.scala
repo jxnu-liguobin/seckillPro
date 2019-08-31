@@ -75,7 +75,7 @@ trait SeckillUserServiceComponent extends RepositorySupport {
       // 判断手机号是否存在
       val user = getById(loginVo.mobile.toLong)
       if (VerifyEmpty.empty(user)) throw GlobalException(CodeMsg.MOBILE_NOT_EXIST)
-      val sessionCustom = SessionBuilder.getSession(exchange).get
+      val sessionCustom = SessionBuilder.getOrCreateSession(exchange)
       val token = UUIDUtils.uuid
       logger.info(s"session-id-login: ${sessionCustom.getId}")
       sessionCustom.setAttribute(token, user)

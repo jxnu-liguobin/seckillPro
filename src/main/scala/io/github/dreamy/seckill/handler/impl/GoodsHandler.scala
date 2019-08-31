@@ -39,37 +39,35 @@ class GoodsHandler extends DefaultRestfulHandler {
   override def get(exchange: HttpServerExchange): Future[Any] = {
     //TODO handler的逻辑多了
     def list() = {
-      SessionBuilder.getSession(exchange) match {
-        case Some(session) =>
-          logger.info(s"session-id-list: ${session.getId}")
-          val goodsVos = RedisService.get(GoodsKey.getGoodsList, "", classOf[util.LinkedList[GoodsVo]])
-          val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")
-          val sessionUser = session.getAttribute(token).asInstanceOf[SeckillUser]
-          val user = if (sessionUser != null) {
-            session.setAttribute(token, sessionUser)
-            sessionUser
-          }
-          else {
-            SeckillUserService.getByToken(exchange, token) match {
-              case Some(u) => session.setAttribute(token, u)
-                u
-              case None =>
-                session.invalidate(exchange)
-                throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
-            }
-          }
-          logger.info(s"current user: ${user}")
-          goodsVos match {
-            case g if VerifyEmpty.noEmpty(g) => Future {
-              result(Json.toJson(toJsonObjSeq(goodsVos)))
-            }
-            case g if VerifyEmpty.empty(g) =>
-              for {
-                goodsVoList <- GoodsService.listGoodsVo()
-              } yield {
-                RedisService.set(GoodsKey.getGoodsList, "", goodsVoList.asJava)
-                result(Json.toJson(goodsVoList))
-              }
+      val session = SessionBuilder.getOrCreateSession(exchange)
+      logger.info(s"session-id-list: ${session.getId}")
+      val goodsVos = RedisService.get(GoodsKey.getGoodsList, "", classOf[util.LinkedList[GoodsVo]])
+      val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")
+      val sessionUser = session.getAttribute(token).asInstanceOf[SeckillUser]
+      val user = if (VerifyEmpty.noEmpty(sessionUser)) {
+        session.setAttribute(token, sessionUser)
+        sessionUser
+      }
+      else {
+        SeckillUserService.getByToken(exchange, token) match {
+          case Some(u) => session.setAttribute(token, u)
+            u
+          case None =>
+            session.invalidate(exchange)
+            throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
+        }
+      }
+      logger.info(s"current user: ${user}")
+      goodsVos match {
+        case g if VerifyEmpty.noEmpty(g) => Future {
+          result(Json.toJson(toJsonObjSeq(goodsVos)))
+        }
+        case g if VerifyEmpty.empty(g) =>
+          for {
+            goodsVoList <- GoodsService.listGoodsVo()
+          } yield {
+            RedisService.set(GoodsKey.getGoodsList, "", goodsVoList.asJava)
+            result(Json.toJson(goodsVoList))
           }
       }
     }
@@ -78,45 +76,42 @@ class GoodsHandler extends DefaultRestfulHandler {
       val goodsIdStr = getQueryParamValue(exchange, "goodsId").getOrElse("-1")
       //不加L无法推断类型
       val goodsId = Try(goodsIdStr.toLong).getOrElse(-1L)
-      SessionBuilder.getSession(exchange) match {
-        case Some(session) =>
-          val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")
-          val sessionUser = session.getAttribute(token).asInstanceOf[SeckillUser]
-          val user = if (sessionUser != null) {
-            session.setAttribute(token, sessionUser)
-            sessionUser
-          }
-          else {
-            SeckillUserService.getByToken(exchange, token) match {
-              case Some(u) => session.setAttribute(token, u)
-                u
-              case None =>
-                session.invalidate(exchange)
-                throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
-            }
-          }
-          val goodsFuture = GoodsService.getGoodsVoByGoodsId(goodsId)
-          for {
-            goodsVoOpt <- goodsFuture
-            _ <- ConditionUtils.failCondition(goodsVoOpt.isEmpty, GlobalException(CodeMsg.SECKILL_OVER))
-          } yield {
-            val now = System.currentTimeMillis()
-            var seckillStatus = 0
-            var remainSeconds: Long = 0
-            if (now < goodsVoOpt.get.startDate.toLong) { // 秒杀还没开始，倒计时
-              seckillStatus = 0
-              remainSeconds = ((goodsVoOpt.get.startDate.toLong - now) / 1000)
-            } else if (now > goodsVoOpt.get.endDate.toLong) { // 秒杀已经结束
-              seckillStatus = 2
-              remainSeconds = -1
-            } else { // 秒杀进行中
-              seckillStatus = 1
-              remainSeconds = 0
-            }
-            //泛型的play-json没搞懂，直接转化后再赋值
-            result(Json.toJson(GoodsDetailPresenter(seckillStatus, remainSeconds, goodsVoOpt.get, user)))
-          }
-        case None => sessionNotFound
+      val session = SessionBuilder.getOrCreateSession(exchange)
+      val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")
+      val sessionUser = session.getAttribute(token).asInstanceOf[SeckillUser]
+      val user = if (VerifyEmpty.noEmpty(sessionUser)) {
+        session.setAttribute(token, sessionUser)
+        sessionUser
+      }
+      else {
+        SeckillUserService.getByToken(exchange, token) match {
+          case Some(u) => session.setAttribute(token, u)
+            u
+          case None =>
+            session.invalidate(exchange)
+            throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
+        }
+      }
+      val goodsFuture = GoodsService.getGoodsVoByGoodsId(goodsId)
+      for {
+        goodsVoOpt <- goodsFuture
+        _ <- ConditionUtils.failCondition(goodsVoOpt.isEmpty, GlobalException(CodeMsg.SECKILL_OVER))
+      } yield {
+        val now = System.currentTimeMillis()
+        var seckillStatus = 0
+        var remainSeconds: Long = 0
+        if (now < goodsVoOpt.get.startDate.toLong) { // 秒杀还没开始，倒计时
+          seckillStatus = 0
+          remainSeconds = ((goodsVoOpt.get.startDate.toLong - now) / 1000)
+        } else if (now > goodsVoOpt.get.endDate.toLong) { // 秒杀已经结束
+          seckillStatus = 2
+          remainSeconds = -1
+        } else { // 秒杀进行中
+          seckillStatus = 1
+          remainSeconds = 0
+        }
+        //泛型的play-json没搞懂，直接转化后再赋值
+        result(Json.toJson(GoodsDetailPresenter(seckillStatus, remainSeconds, goodsVoOpt.get, user)))
       }
     }
 

@@ -1,5 +1,8 @@
 package io.github.dreamy.seckill.http
 
+import io.github.dreamy.seckill.exception.GlobalException
+import io.github.dreamy.seckill.presenter.CodeMsg
+import io.github.dreamy.seckill.util.VerifyEmpty
 import io.undertow.UndertowMessages
 import io.undertow.server.session._
 import io.undertow.server.{ HttpHandler, HttpServerExchange }
@@ -21,11 +24,14 @@ object SessionBuilder {
    * @param exchange
    * @return
    */
-  def getNewSession(exchange: HttpServerExchange) = {
+  def getOrCreateSession(exchange: HttpServerExchange) = {
     val sessionManager: SessionManager = exchange.getAttachment(SessionManager.ATTACHMENT_KEY)
     val sessionConfig: SessionConfig = exchange.getAttachment(SessionConfig.ATTACHMENT_KEY)
     if (sessionManager == null) throw UndertowMessages.MESSAGES.sessionManagerNotFound
-    sessionManager.createSession(exchange, sessionConfig)
+    val s = sessionManager.getSession(exchange, sessionConfig)
+    val session = if (VerifyEmpty.empty(s)) sessionManager.createSession(exchange, sessionConfig) else s
+    if (VerifyEmpty.empty(session)) throw GlobalException(CodeMsg.INTERNAL_ERROR)
+    session
   }
 
   /**
@@ -34,13 +40,12 @@ object SessionBuilder {
    * @param exchange
    * @return
    */
+  @deprecated
   def getSession(exchange: HttpServerExchange) = {
     val sessionManager: SessionManager = exchange.getAttachment(SessionManager.ATTACHMENT_KEY)
     val sessionConfig: SessionConfig = exchange.getAttachment(SessionConfig.ATTACHMENT_KEY)
     if (sessionManager == null) throw UndertowMessages.MESSAGES.sessionManagerNotFound
-    var session = Option(sessionManager.getSession(exchange, sessionConfig))
-    if (session .isEmpty) session = Option(sessionManager.createSession(exchange, sessionConfig))
-    session
+    Option(sessionManager.getSession(exchange, sessionConfig))
   }
 
   /**

@@ -41,7 +41,7 @@ class LoginHandler extends DefaultRestfulHandler {
    * @return
    */
   override def post(exchange: HttpServerExchange): Future[Any] = {
-    val session = SessionBuilder.getNewSession(exchange)
+    val session = SessionBuilder.getOrCreateSession(exchange)
     logger.info(s"session-id-request: ${session.getId}")
     //携带cookie的请求会校验token是否有效，有效的获取到用户信息，并刷新session中的token-user，反回token（反回token只是用于测试）
     val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")
