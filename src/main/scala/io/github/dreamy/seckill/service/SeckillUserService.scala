@@ -86,7 +86,7 @@ trait SeckillUserServiceComponent extends RepositorySupport {
       if (!calcPass.equals(dbPass)) throw GlobalException(CodeMsg.PASSWORD_ERROR)
       // 生成cookie
       addCookie(exchange, token, user)
-      token
+      (user,token)
     }
   }
 

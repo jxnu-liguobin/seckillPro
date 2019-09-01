@@ -39,7 +39,8 @@ object CodeMsg {
   /**
    * token无效
    */
-  val TOKEN_ERROR = CodeMsg(509, "无效的token")
+  val TOKEN_ERROR = CodeMsg(509, "无效的token，请重新登录")
+
   /**
    * 服务端异常
    */

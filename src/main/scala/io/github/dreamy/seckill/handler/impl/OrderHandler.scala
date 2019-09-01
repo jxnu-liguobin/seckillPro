@@ -1,8 +1,7 @@
 package io.github.dreamy.seckill.handler.impl
 
-import io.github.dreamy.seckill.entity.SeckillUser
 import io.github.dreamy.seckill.exception.GlobalException
-import io.github.dreamy.seckill.http.{ DefaultRestfulHandler, SessionBuilder }
+import io.github.dreamy.seckill.http.DefaultRestfulHandler
 import io.github.dreamy.seckill.presenter.{ CodeMsg, OrderDetailPresenter }
 import io.github.dreamy.seckill.service.{ GoodsService, OrderService, SeckillUserService }
 import io.github.dreamy.seckill.util.{ ConditionUtils, VerifyEmpty }
@@ -12,7 +11,6 @@ import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Try
 
 /**
  *
@@ -27,30 +25,20 @@ class OrderHandler extends DefaultRestfulHandler {
   override def methods: Set[String] = single(Methods.GET_STRING)
 
   override def get(exchange: HttpServerExchange): Future[Any] = {
-    val session = SessionBuilder.getOrCreateSession(exchange)
-    val token = Try(exchange.getRequestCookies.get(SeckillUserService.COOKI_NAME_TOKEN).getValue).getOrElse("")
-    val sessionUser = session.getAttribute(token).asInstanceOf[SeckillUser]
-    val user = if (VerifyEmpty.noEmpty(sessionUser)) {
-      session.setAttribute(token, sessionUser)
-      sessionUser
+    val token = getCookieValueByName(exchange, SeckillUserService.COOKI_NAME_TOKEN)
+    val user = isLogin(exchange, token)
+    if (VerifyEmpty.noEmpty(user)) {
+      val orderId = getQueryParamValue(exchange, "orderId").getOrElse("-1").toLong
+      (for {
+        orderInfoOpt <- OrderService.getOrderById(orderId)
+        _ <- ConditionUtils.failCondition(orderInfoOpt.isEmpty, GlobalException(CodeMsg.ORDER_NOT_EXIST))
+        goodsVoOpt <- GoodsService.getGoodsVoByGoodsId(orderInfoOpt.get.goodsId.getOrElse(-1L))
+        _ <- ConditionUtils.failCondition(goodsVoOpt.isEmpty, GlobalException(CodeMsg.ORDER_NOT_EXIST))
+      } yield {
+        resultSuccess(Json.toJson(OrderDetailPresenter(goodsVoOpt.get, orderInfoOpt.get)))
+      }).elapsed("秒杀订单详情查询")
     } else {
-      SeckillUserService.getByToken(exchange, token) match {
-        case Some(u) => session.setAttribute(token, u)
-          u
-        case None =>
-          session.invalidate(exchange)
-          throw GlobalException(CodeMsg.TOKEN_ERROR) //无效token
-      }
-    }
-    logger.info(s"current user: ${user}")
-    val orderId = getQueryParamValue(exchange, "orderId").getOrElse("-1").toLong
-    for {
-      orderInfoOpt <- OrderService.getOrderById(orderId)
-      _ <- ConditionUtils.failCondition(orderInfoOpt.isEmpty, GlobalException(CodeMsg.ORDER_NOT_EXIST))
-      goodsVoOpt <- GoodsService.getGoodsVoByGoodsId(orderInfoOpt.get.goodsId.getOrElse(-1L))
-      _ <- ConditionUtils.failCondition(goodsVoOpt.isEmpty, GlobalException(CodeMsg.ORDER_NOT_EXIST))
-    } yield {
-      result(Json.toJson(OrderDetailPresenter(goodsVoOpt.get, orderInfoOpt.get)))
+      tokenNotFound
     }
   }
 }
