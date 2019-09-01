@@ -23,6 +23,30 @@ import scalikejdbc.DBSession
 trait SeckillUserService extends SeckillUserServiceComponent {
 
   /**
+   * 登录
+   */
+  def login(exchange: HttpServerExchange, loginVo: LoginVo) = {
+    localTx { implicit session =>
+      if (VerifyEmpty.empty(loginVo)) throw GlobalException(CodeMsg.SERVER_ERROR)
+      // 判断手机号是否存在
+      val user = getById(loginVo.mobile.toLong)
+      if (VerifyEmpty.empty(user)) throw GlobalException(CodeMsg.MOBILE_NOT_EXIST)
+      val sessionCustom = SessionBuilder.getOrCreateSession(exchange)
+      val token = UUIDUtils.uuid
+      logger.info(s"session-id-login: ${sessionCustom.getId}")
+      sessionCustom.setAttribute(token, user)
+      // 验证密码
+      val dbPass = user.password
+      val saltDB = user.salt
+      val calcPass = MD5Utils.formPassToDBPass(loginVo.password, saltDB)
+      if (!calcPass.equals(dbPass)) throw GlobalException(CodeMsg.PASSWORD_ERROR)
+      // 生成cookie
+      addCookie(exchange, token, user)
+      (user, token)
+    }
+  }
+
+  /**
    * token是唯一的，需要传进来，不然无法登陆了
    */
   def updatePasswordById(token: String, id: Long, formPass: String) = {
@@ -45,6 +69,7 @@ trait SeckillUserService extends SeckillUserServiceComponent {
   }
 }
 
+//component中的方法主要用于处理service事务，不带Future
 trait SeckillUserServiceComponent extends RepositorySupport {
 
   /**
@@ -55,7 +80,7 @@ trait SeckillUserServiceComponent extends RepositorySupport {
    * @param user     登录用户
    * @return
    */
-  private[this] def addCookie(exchange: HttpServerExchange, token: String, user: SeckillUser) = {
+  def addCookie(exchange: HttpServerExchange, token: String, user: SeckillUser) = {
     //TODO 这里存在用户
     RedisService.set(SeckillUserKey.token, token, user)
     val cookie = new CookieImpl(SeckillUserService.COOKI_NAME_TOKEN, token)
@@ -67,31 +92,9 @@ trait SeckillUserServiceComponent extends RepositorySupport {
   }
 
   /**
-   * 登录
-   */
-  def login(exchange: HttpServerExchange, loginVo: LoginVo) = {
-    localTx { implicit session =>
-      if (VerifyEmpty.empty(loginVo)) throw GlobalException(CodeMsg.SERVER_ERROR)
-      // 判断手机号是否存在
-      val user = getById(loginVo.mobile.toLong)
-      if (VerifyEmpty.empty(user)) throw GlobalException(CodeMsg.MOBILE_NOT_EXIST)
-      val sessionCustom = SessionBuilder.getOrCreateSession(exchange)
-      val token = UUIDUtils.uuid
-      logger.info(s"session-id-login: ${sessionCustom.getId}")
-      sessionCustom.setAttribute(token, user)
-      // 验证密码
-      val dbPass = user.password
-      val saltDB = user.salt
-      val calcPass = MD5Utils.formPassToDBPass(loginVo.password, saltDB)
-      if (!calcPass.equals(dbPass)) throw GlobalException(CodeMsg.PASSWORD_ERROR)
-      // 生成cookie
-      addCookie(exchange, token, user)
-      (user,token)
-    }
-  }
-
-  /**
    * 根据token获取用户信息
+   *
+   * 用于登录，比较特殊，不带Future
    */
   def getByToken(exchange: HttpServerExchange, token: String) = {
     if (VerifyEmpty.empty(token)) None

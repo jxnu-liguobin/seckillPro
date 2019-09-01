@@ -23,7 +23,4 @@ object VerifyRegex {
       false
     } else mobile_pattern.matcher(src).matches()
   }
-
-  println(VerifyRegex.isMobile("18912341234"))
-  println(VerifyRegex.isMobile("1891234123"))
 }

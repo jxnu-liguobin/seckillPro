@@ -16,7 +16,7 @@ import scala.concurrent.Future
  * 秒杀
  *
  * @author 梦境迷离
- * @time 2019-08-06
+ * @since 2019-08-06
  * @version v2.0
  */
 trait SeckillService extends SeckillServiceComponent {

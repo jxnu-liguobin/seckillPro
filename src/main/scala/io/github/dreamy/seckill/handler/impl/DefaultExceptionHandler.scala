@@ -14,7 +14,7 @@ import play.api.libs.json.Json
  * 默认的异常处理器
  *
  * @author 梦境迷离
- * @time 2019-08-19
+ * @since 2019-08-19
  * @version v1.0
  */
 class DefaultExceptionHandler extends ExceptionHandler {

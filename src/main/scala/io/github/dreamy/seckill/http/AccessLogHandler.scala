@@ -13,7 +13,7 @@ import io.undertow.util.HeaderValues
  * 访问日志处理
  *
  * @author 梦境迷离
- * @time 2019年8月19日
+ * @since 2019年8月19日
  * @version v1.0
  */
 class AccessLogHandler(next: HttpHandler, service: Option[String]) extends HttpHandler {

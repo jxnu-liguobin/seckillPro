@@ -17,7 +17,7 @@ import scala.concurrent.Future
  * 订单
  *
  * @author 梦境迷离
- * @time 2019-08-05
+ * @since 2019-08-05
  * @version v2.0
  */
 trait OrderService extends OrderServiceComponent {
@@ -30,9 +30,20 @@ trait OrderService extends OrderServiceComponent {
       Option(RedisService.get(OrderKey.getSeckillOrderByUidGid, "" + userId + "_" + goodsId, classOf[SeckillOrder]))
     }
 
+  /**
+   * 根据订单id查询订单信息
+   */
+  def getOrderById(orderId: Long) = {
+    localTx {
+      implicit session =>
+        OrderDao.getOrderById(orderId).apply()
+    }
+  }
 }
 
+//Component的方法不能直接使用
 trait OrderServiceComponent extends RepositorySupport {
+
   /**
    * 订单创建
    */
@@ -46,17 +57,6 @@ trait OrderServiceComponent extends RepositorySupport {
     //生成订单的时候写完mysql,也要写进redis中,下次点击将直接去缓存，响应快
     RedisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.id.getOrElse(-1) + "_" + goodsVo.goods.id, seckillOrder)
     orderInfo.copy(id = Some(id))
-  }
-
-
-  /**
-   * 根据订单id查询订单信息
-   */
-  def getOrderById(orderId: Long)(implicit session: DBSession = getReadOnlySession) = {
-    localTx {
-      implicit session =>
-        OrderDao.getOrderById(orderId).apply()
-    }
   }
 
   /**

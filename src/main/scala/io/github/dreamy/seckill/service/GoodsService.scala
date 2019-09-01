@@ -14,7 +14,7 @@ import scala.concurrent.Future
  * 由外部调用者提供session，实现多操作的事务
  *
  * @author 梦境迷离
- * @time 2019-08-05
+ * @since 2019-08-05
  * @version v2.0
  */
 trait GoodsService extends GoodsServiceComponent {

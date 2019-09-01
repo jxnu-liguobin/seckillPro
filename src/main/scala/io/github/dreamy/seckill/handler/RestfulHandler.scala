@@ -20,7 +20,7 @@ import scala.runtime.BoxedUnit
  * crud处理器混入该特质
  *
  * @author 梦境迷离
- * @time 2019-08-18
+ * @since 2019-08-18
  * @version v1.0
  */
 trait RestfulHandler extends HttpHandler with PerformanceRecord with Executable with LazyLogging {
