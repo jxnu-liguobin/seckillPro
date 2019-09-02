@@ -63,8 +63,8 @@ object GoodsDetailPresenter {
     Json.obj(
       "seckillStatus" -> goodsDetailPresenter.seckillStatus,
       "remainSeconds" -> goodsDetailPresenter.remainSeconds,
-      "user" -> user,
-      "goodsVo" -> goodsVo
+      "user" -> user.removeNull,
+      "goodsVo" -> goodsVo.removeNull
     )
   }
 }

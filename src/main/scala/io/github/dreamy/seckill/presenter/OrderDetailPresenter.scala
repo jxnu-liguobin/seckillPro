@@ -8,7 +8,7 @@ import play.api.libs.json.{ Json, Writes }
  * 订单详情视图对象对象
  *
  * @author 梦境迷离
- * @time 2019年8月2日
+ * @since 2019年8月2日
  * @version v2.0
  */
 case class OrderDetailPresenter(goodsVo: GoodsVo, orderInfo: OrderInfo)
@@ -30,7 +30,7 @@ object OrderDetailPresenter {
       "status" -> orderInfo.status,
       "createDate" -> orderInfo.createDate.toStrOpt,
       "payDate" -> orderInfo.payDate.toStrOpt
-    )
+    ).removeNull
     Json.obj(
       "goodsVo" -> orderDetailPresenter.goodsVo,
       "orderInfo" -> orderInfoObj

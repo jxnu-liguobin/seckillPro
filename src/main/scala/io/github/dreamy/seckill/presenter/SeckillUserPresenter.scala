@@ -24,6 +24,6 @@ object SeckillUserPresenter {
       "head" -> seckillUser.head,
       "loginCount" -> seckillUser.loginCount,
       "lastLoginDate" -> seckillUser.lastLoginDate.toStrOpt
-    )
+    ).removeNull
   }
 }

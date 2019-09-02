@@ -14,7 +14,7 @@ import play.api.libs.json.{ JsObject, Json, Writes }
  * case class 不能继承
  *
  * @author 梦境迷离
- * @time 2019年8月2日
+ * @since 2019年8月2日
  * @version v2.0
  */
 case class GoodsVo (goods: Goods, seckillPrice: Double, stockCount: Int,
@@ -73,6 +73,6 @@ object GoodsVo {
       "seckillPrice" -> goodsVo.seckillPrice,
       "startDate" -> goodsVo.startDate.toStrOpt,
       "endDate" -> goodsVo.endDate.toStrOpt
-    )
+    ).removeNull
   }
 }
