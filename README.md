@@ -64,6 +64,7 @@ Others Version
 4. Redis分布式锁
 5. 分布式Session
 6. 支持Zookeeper（未试过Scala是否可行，可能Consul）、Kafka、Akka stream
+7. 页面（不会写。。）
 
 ### 思考改进
 
