@@ -4,7 +4,7 @@ package io.github.dreamy.seckill.config
  * Redis配置属性
  *
  * @author 梦境迷离
- * @time 2019-08-05
+ * @since 2019-08-05
  * @version v2.0
  */
 case class RedisConfig(host: String, port: Int, timeout: Int, password: String, poolMaxTotal: Int, poolMaxIdle: Int, poolMaxWait: Int)

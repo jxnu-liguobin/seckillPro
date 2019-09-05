@@ -1,5 +1,7 @@
 package io.github.dreamy.seckill.config
 
+import scala.concurrent.duration._
+
 /**
  * 系统常量
  *
@@ -10,5 +12,7 @@ package io.github.dreamy.seckill.config
 object Constant {
 
   final val default_chartset = "utf-8"
+
+  final val SECKILL_HANDLE = 6 seconds
 
 }

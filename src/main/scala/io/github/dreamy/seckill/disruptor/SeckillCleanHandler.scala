@@ -10,7 +10,7 @@ import com.typesafe.scalalogging.LazyLogging
  */
 object SeckillCleanHandler extends EventHandler[SeckillMessage] with LazyLogging {
   override def onEvent(t: SeckillMessage, l: Long, b: Boolean): Unit = {
-    logger.info(s"clean SeckillMessage: [$t]")
+    logger.info(s"clean seckill message: $t")
     t.goodsId = -1
     t.seckillUser = null
   }

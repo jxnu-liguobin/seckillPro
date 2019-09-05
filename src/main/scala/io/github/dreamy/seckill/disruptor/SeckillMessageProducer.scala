@@ -14,14 +14,13 @@ class SeckillMessageProducer(ringBuffer: RingBuffer[SeckillMessage]) extends Laz
 
   object SeckillEventTranslatorVararg extends EventTranslatorTwoArg[SeckillMessage, SeckillMessage, Boolean] {
     override def translateTo(t: SeckillMessage, l: Long, a: SeckillMessage, b: Boolean): Unit = {
-      logger.info("translateTo message")
       t.goodsId = a.goodsId
       t.seckillUser = a.seckillUser
     }
   }
 
   def seckill(goodsId: Long, seckillUser: SeckillUser): Unit = {
-    logger.info(s"send message, goodsId: [$goodsId], seckillUser: [$seckillUser]")
+    logger.info(s"send message, goodsId: $goodsId, seckillUser: $seckillUser")
     this.ringBuffer.publishEvent(SeckillEventTranslatorVararg, SeckillMessage(goodsId, seckillUser), true)
   }
 }

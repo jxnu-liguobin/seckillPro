@@ -1,6 +1,7 @@
 package io.github.dreamy.seckill.disruptor
 
 import com.typesafe.scalalogging.LazyLogging
+import io.github.dreamy.seckill.config.Constant
 import io.github.dreamy.seckill.entity.SeckillUser
 import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.presenter.CodeMsg
@@ -20,7 +21,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class SeckillServiceHandler extends LazyLogging {
 
   def startSeckil(goodsId: Long, seckillUser: SeckillUser) = {
-    logger.info("receive message, start seckill goodsIds: [" + goodsId + "] seckillUser: [" + seckillUser + "]")
+    logger.info(s"start seckill goodsIds: $goodsId, seckillUser: $seckillUser")
     //查数据库，得到秒杀商品视图对象
     val s = for {
       goodsOpt <- GoodsService.getGoodsVoByGoodsId(goodsId)
@@ -33,15 +34,13 @@ class SeckillServiceHandler extends LazyLogging {
       // 从redis中获取秒杀订单，再次判断是否已经秒杀到了
       order <- OrderService.getSeckillOrderByUserIdGoodsId(seckillUser.id.get, goodsId)
       _ <- ConditionUtils.failCondition(order.isDefined, GlobalException(CodeMsg.SECKILL_OVER))
-      ret <- order match {
-        // 减库存 下订单 写入秒杀订单
-        case None => SeckillService.seckill(seckillUser, goods)
-      }
+      // 减库存 下订单 写入秒杀订单
+      _ <- SeckillService.seckill(seckillUser, goods)
     } yield {
+      //      秒杀完推送
       Unit
     }
-    import scala.concurrent.duration._
-    Await.result(s, 6 seconds)
+    Await.result(s, Constant.SECKILL_HANDLE)
   }
 }
 

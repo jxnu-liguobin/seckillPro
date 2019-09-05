@@ -25,4 +25,24 @@ object ConditionUtils {
   def failCondition(condition: Boolean, PlayException: => Exception): Future[Unit] =
     if (condition) Future.failed(PlayException) else Future.successful(())
 
+  /**
+   * {{{
+   * for {
+   *   _ <- ConditionUtils.failConditionWithAction(stock < 0, GlobalException(CodeMsg.REQUEST_ILLEGAL))(goodsId, (goodsIdArgs: Long) => {
+   *           localOverMap.put(goodsIdArgs, true)
+   *           Unit
+   *   })
+   * }
+   * }}}
+   *
+   * @param condition
+   * @param PlayException
+   */
+  def failConditionWithAction(condition: Boolean, PlayException: => Exception)(args: Long, f: Long => Unit) = {
+    if (condition) {
+      f(args)
+      Future.failed(PlayException)
+    } else Future.successful(())
+  }
+
 }
