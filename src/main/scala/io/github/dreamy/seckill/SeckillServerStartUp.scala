@@ -1,10 +1,9 @@
 package io.github.dreamy.seckill
 
-import java.util.concurrent.CountDownLatch
-
 import com.google.inject.Guice
 import io.github.dreamy.seckill.database.RepositorySupport
 import io.github.dreamy.seckill.module.SeckillModule
+import io.github.dreamy.seckill.redis.StockCountInitialization
 
 /**
  * 秒杀系统启动类
@@ -15,26 +14,27 @@ import io.github.dreamy.seckill.module.SeckillModule
  */
 object SeckillServerStartUp extends App {
 
+  //初始化db
   RepositorySupport.init()
+  //启动undertow
   start()
+  //初始化redis库存缓存
+  StockCountInitialization.initCache()
 
   /**
    * 80端口可能出现Permission denied: connect
    */
-  def start (): Unit = {
-    val c = new CountDownLatch(1)
+  def start(): Unit = {
     var server: SeckillServer = null
-    try {
-      val moudle = new SeckillModule
-      val inject = Guice.createInjector(moudle)
-      server = new SeckillServer(inject)
-      server.startUp()
-      c.await()
-    } catch {
-      case exception: Exception =>
-        exception.printStackTrace()
-        c.countDown()
+    val moudle = new SeckillModule
+    val inject = Guice.createInjector(moudle)
+    server = new SeckillServer(inject)
+    server.startUp()
+    Runtime.getRuntime.addShutdownHook(new Thread() {
+      override def run(): Unit = {
+        println("server shutdown, bye bye!")
         server.shutdown()
-    }
+      }
+    })
   }
 }

@@ -48,7 +48,7 @@ class SeckillServer(injector: Injector) extends LazyLogging {
         .setWorkerThreads(Runtime.getRuntime.availableProcessors())
       undertow = builder.build()
       undertow.start()
-      logger.info(s"undertow server start successfully on port: [$port]")
+      logger.info(s"undertow server start successfully on port: $port")
     }
   }
 

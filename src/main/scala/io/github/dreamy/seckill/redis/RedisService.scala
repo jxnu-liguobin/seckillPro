@@ -40,6 +40,10 @@ object RedisService extends LazyLogging {
   def set[T](prefix: KeyPrefix, key: String, value: T): Boolean = {
     val str = RedisService.beanToString(value)
     if (VerifyEmpty.empty(str)) false else {
+      //TODO -1的无效key临时处理，出现这种请求可能是id没传过来，理论上不存在这种可能
+      if (str.startsWith("-1") || str.endsWith("-1")) {
+        logger.warn(s"invalid key: $str when save to redis")
+      }
       // 生成真正的key
       val realKey = prefix.getPrefix() + key
       val seconds = prefix.expireSeconds()

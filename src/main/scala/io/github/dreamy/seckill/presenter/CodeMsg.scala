@@ -6,7 +6,7 @@ import scala.util.Try
  * 状态码信息
  *
  * @author 梦境迷离
- * @time 2019年8月1日
+ * @since 2019年8月1日
  * @version v2.0
  */
 case class CodeMsg private(code: Int, msg: String) {
@@ -95,9 +95,6 @@ object CodeMsg {
   //id转化失败
   val HASH_ERROR = CodeMsg(526, "无效的ID")
 
-  // 商品模块 53X
-
-  // 订单模块 54X
   /**
    * 订单不存在
    */

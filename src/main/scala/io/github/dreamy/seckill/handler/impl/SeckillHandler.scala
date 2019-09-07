@@ -4,14 +4,13 @@ import io.github.dreamy.seckill.disruptor.SeckillMessageQueueServer
 import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.http.DefaultRestfulHandler
 import io.github.dreamy.seckill.presenter.CodeMsg
-import io.github.dreamy.seckill.redis.RedisService
 import io.github.dreamy.seckill.redis.key.{ GoodsKey, OrderKey, SeckillKey }
+import io.github.dreamy.seckill.redis.{ RedisService, StockCountInitialization }
 import io.github.dreamy.seckill.service.{ GoodsService, OrderService, SeckillService, SeckillUserService }
 import io.github.dreamy.seckill.util.{ ConditionUtils, VerifyEmpty, VerifyImage }
 import io.undertow.server.HttpServerExchange
 import io.undertow.util.Methods
 
-import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -28,7 +27,7 @@ class SeckillHandler extends DefaultRestfulHandler {
   /**
    * 系统初始化加载商品库存到redis中
    */
-  private final lazy val localOverMap = new mutable.HashMap[Long, Boolean]()
+  private final lazy val localOverMap = StockCountInitialization.getLocalOverMap
 
   private val default_count = 10
 

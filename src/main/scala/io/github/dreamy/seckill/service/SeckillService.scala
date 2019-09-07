@@ -96,7 +96,7 @@ trait SeckillService extends SeckillServiceComponent {
         None
       } else {
         val str = MD5Utils.md5(UUIDUtils.uuid + "123456")
-        RedisService.set(SeckillKey.getSeckillPath, "" + user.id + "_" + goodsId, str)
+        RedisService.set(SeckillKey.getSeckillPath, "" + user.id.getOrElse(-1L) + "_" + goodsId, str)
         Option(str)
       }
     }

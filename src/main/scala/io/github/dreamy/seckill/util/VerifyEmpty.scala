@@ -25,5 +25,4 @@ object VerifyEmpty {
   //有条件为空即为true  ||
   def oneEmpty(obj: AnyRef*) = if (obj.contains(null)) true else false
 
-
 }

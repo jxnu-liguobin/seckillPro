@@ -14,24 +14,13 @@ import play.api.libs.json.{ Json, Writes }
  * @version v1.0
  */
 case class GoodsDetailPresenter(
-                                 /**
-                                  * 秒杀状态
-                                  */
+                                 //秒杀状态
                                  seckillStatus: Int,
-
-                                 /**
-                                  * 遗留时间
-                                  */
+                                 //遗留时间
                                  remainSeconds: Long,
-
-                                 /**
-                                  * 商品视图对象
-                                  */
+                                 //商品视图对象
                                  goodsVo: GoodsVo,
-
-                                 /**
-                                  * 秒杀用户
-                                  */
+                                 //秒杀用户
                                  user: SeckillUser,
                                )
 

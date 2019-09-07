@@ -55,7 +55,7 @@ trait OrderServiceComponent extends RepositorySupport {
     val seckillOrder = SeckillOrder(None, user.id, Option(id), goodsVo.goods.id)
     OrderDao.insertSeckillOrder(seckillOrder).apply()
     //生成订单的时候写完mysql,也要写进redis中,下次点击将直接去缓存，响应快
-    RedisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.id.getOrElse(-1) + "_" + goodsVo.goods.id, seckillOrder)
+    RedisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.id.getOrElse(-1L) + "_" + goodsVo.goods.id.getOrElse(-1L), seckillOrder)
     orderInfo.copy(id = Some(id))
   }
 
