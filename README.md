@@ -54,7 +54,8 @@ Others Version
 3. 以sbt项目导入IDEA
 4. 启动redis，默认配置即可
 4. 查看handler包下的uri，类似Spring的controller中的uri或Playframework的routes中的uri，启动SeckillServerStartUp.scala
-5. 通过浏览器或postman测试，`http:127.0.0.1:8080/uri 路径中的查询参数是必选的，其他查询参数：类似?后面的都是可选的`
+5. 通过浏览器或postman测试，`http://127.0.0.1:8080/uri 路径中的查询参数是必选的，其他查询参数：类似?后面的都是可选的`
+6. 必须先请求登录handler，否则没有cookie/token，后续不能请求任何handlers
 
 ## TODO
 
