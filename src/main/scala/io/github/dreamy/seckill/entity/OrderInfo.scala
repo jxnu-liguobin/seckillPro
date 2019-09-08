@@ -8,7 +8,7 @@ import java.time.LocalDateTime
  * deliveryAddrId交付地址先设置为可选的
  *
  * @author 梦境迷离
- * @time 2019年8月1日
+ * @since 2019年8月1日
  * @version v2.0
  */
 case class OrderInfo(id: Option[Long], userId: Option[Long], goodsId: Option[Long], deliveryAddrId: Option[Long], goodsName: String, goodsCount: Int,

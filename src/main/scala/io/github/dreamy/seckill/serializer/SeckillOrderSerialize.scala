@@ -9,7 +9,7 @@ import io.github.dreamy.seckill.entity.SeckillOrder
  * 自定义SeckillOrder的序列化
  *
  * @author 梦境迷离
- * @time 2019-08-06
+ * @since 2019-08-06
  * @version v2.0
  */
 class SeckillOrderSerialize extends JsonSerializer[SeckillOrder] with JsonDeserializer[SeckillOrder] {

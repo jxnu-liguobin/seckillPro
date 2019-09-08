@@ -6,7 +6,7 @@ import io.github.dreamy.seckill.redis.BasePrefix
  * 定义Redis 秒杀键 前缀
  *
  * @author 梦境迷离
- * @time 2019年8月5日
+ * @since 2019年8月5日
  * @version v2.0
  */
 class SeckillKey private(expireSe: Integer, var prefix: String) extends BasePrefix(expireSe, prefix)

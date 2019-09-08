@@ -9,7 +9,7 @@ import scala.concurrent.Future
  * 数据库连接以及CRUD事物封装
  *
  * @author 梦境迷离
- * @time 2019-08-01
+ * @since 2019-08-01
  * @version v2.0
  */
 trait RepositorySupport extends DataSourceSupport {

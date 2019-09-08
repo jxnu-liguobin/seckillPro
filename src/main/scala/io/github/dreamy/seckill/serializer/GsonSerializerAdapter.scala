@@ -11,7 +11,7 @@ import io.github.dreamy.seckill.presenter.GoodsVo
  * gson序列化
  *
  * @author 梦境迷离
- * @time 2019-08-06
+ * @since 2019-08-06
  * @version v2.0
  */
 object GsonSerializerAdapter {

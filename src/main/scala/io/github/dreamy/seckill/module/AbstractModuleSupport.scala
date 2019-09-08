@@ -11,7 +11,7 @@ import scala.collection.JavaConverters._
  * 用于guice的自定义依赖注入模块，继承该类并实例化给inject即可
  *
  * @author 梦境迷离
- * @time 2019-08-18
+ * @since 2019-08-18
  * @version v1.0
  */
 abstract class AbstractModuleSupport extends AbstractModule {

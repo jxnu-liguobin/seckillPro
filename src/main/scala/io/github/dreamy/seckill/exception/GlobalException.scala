@@ -6,7 +6,7 @@ import io.github.dreamy.seckill.presenter.CodeMsg
  * 全局定义
  *
  * @author 梦境迷离
- * @time 2019年8月1日
+ * @since 2019年8月1日
  * @version v2.0
  */
 

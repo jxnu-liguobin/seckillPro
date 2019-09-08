@@ -9,7 +9,7 @@ import scalikejdbc._
  * 商品
  *
  * @author 梦境迷离
- * @time 2019-08-02
+ * @since 2019-08-02
  * @version v2.0
  */
 trait GoodsDao {

@@ -8,7 +8,7 @@ import io.github.dreamy.seckill.util.DateUtils._
  * 隐式对象工具
  *
  * @author 梦境迷离
- * @time 2019-08-02
+ * @since 2019-08-02
  * @version v2.0
  */
 @deprecated

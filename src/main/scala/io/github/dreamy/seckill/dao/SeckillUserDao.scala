@@ -9,7 +9,7 @@ import scalikejdbc._
  * 秒杀用户
  *
  * @author 梦境迷离
- * @time 2019-08-03
+ * @since 2019-08-03
  * @version v2.0
  */
 trait SeckillUserDao {
@@ -28,8 +28,6 @@ trait SeckillUserDao {
           user.longOpt("registerDate").toLocalDateTimeOpt, user.longOpt("lastLoginDate").toLocalDateTimeOpt)
     }.single()
   }
-
-  //  TODO 事务移到service
 
   /**
    * 根据id和密码更新秒杀用户

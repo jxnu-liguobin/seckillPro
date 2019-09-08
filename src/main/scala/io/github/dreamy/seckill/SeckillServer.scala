@@ -14,7 +14,7 @@ import io.undertow.{ Undertow, UndertowOptions }
  * undertow 服务器
  *
  * @author 梦境迷离
- * @time 2019年8月19日
+ * @since 2019年8月19日
  * @version v1.0
  */
 class SeckillServer(injector: Injector) extends LazyLogging {

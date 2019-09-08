@@ -12,7 +12,7 @@ import scalikejdbc.{ ConnectionPool, DataSourceConnectionPool }
  * 数据源与配置获取
  *
  * @author 梦境迷离
- * @time 2019-08-18
+ * @since 2019-08-18
  * @version v1.0
  */
 trait DataSourceSupport extends LazyLogging {

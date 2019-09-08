@@ -7,7 +7,7 @@ import scalikejdbc._
  * 普通用户
  *
  * @author 梦境迷离
- * @time 2019-08-03
+ * @since 2019-08-03
  * @version v2.0
  */
 trait UserDao {

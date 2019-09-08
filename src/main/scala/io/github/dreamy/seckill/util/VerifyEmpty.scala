@@ -4,7 +4,7 @@ package io.github.dreamy.seckill.util
  * 空值验证工具类
  *
  * @author 梦境迷离
- * @time 2019-08-02
+ * @since 2019-08-02
  * @version v2.0
  */
 object VerifyEmpty {

@@ -14,7 +14,7 @@ import javax.script.ScriptEngineManager
  * 验证码
  *
  * @author 梦境迷离
- * @time 2019-08-06
+ * @since 2019-08-06
  * @version v2.0
  */
 object VerifyImage extends LazyLogging {

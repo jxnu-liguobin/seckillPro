@@ -7,7 +7,7 @@ import redis.clients.jedis.{ JedisPool, JedisPoolConfig }
  * redis连接池
  *
  * @author 梦境迷离
- * @time 2019-08-05
+ * @since 2019-08-05
  * @version v2.0
  */
 object RedisPoolFactory {

@@ -11,7 +11,7 @@ import io.github.dreamy.seckill.util.CustomConversions._
  * 自定义SeckillUser的序列化
  *
  * @author 梦境迷离
- * @time 2019-08-07
+ * @since 2019-08-07
  * @version v2.0
  */
 class SeckillUserSerialize extends JsonSerializer[SeckillUser] with JsonDeserializer[SeckillUser] {

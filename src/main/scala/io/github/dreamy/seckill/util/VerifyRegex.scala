@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils
  * 注解使用的是Java,由于Java调用半生对象失败，未知原因，改用普通类
  *
  * @author 梦境迷离
- * @time 2019年8月1日
+ * @since 2019年8月1日
  * @version v2.0
  */
 object VerifyRegex {
