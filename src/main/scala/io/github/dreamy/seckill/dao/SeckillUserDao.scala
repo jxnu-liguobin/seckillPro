@@ -17,7 +17,7 @@ trait SeckillUserDao {
   /**
    * 根据id查询秒杀用户
    */
-  def getById (id: Long) = {
+  def getById(id: Long) = {
     sql"""
               select * from seckill_user where id = ${id}
           """.map {
@@ -32,7 +32,7 @@ trait SeckillUserDao {
   /**
    * 根据id和密码更新秒杀用户
    */
-  def update (toBeUpdate: SeckillUser) = {
+  def update(toBeUpdate: SeckillUser) = {
     sql"""
               update seckill_user set password = ${toBeUpdate.password} where id = ${toBeUpdate.id}
           """.update()

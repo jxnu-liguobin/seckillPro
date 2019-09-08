@@ -17,7 +17,7 @@ trait GoodsDao {
   /**
    * 查询出所有商品视图对象
    */
-  def listGoodsVo () = {
+  def listGoodsVo() = {
     sql"""
           select g.*,mg.seckill_price,mg.stock_count, mg.start_date, mg.end_date from seckill_goods mg left join goods g on mg.goods_id = g.id
       """.map {
@@ -36,10 +36,10 @@ trait GoodsDao {
   /**
    * 根据商品id=秒杀的商品id,查询出商品视图对象
    */
-  def getGoodsVoByGoodsId (goodsId: Long) = {
+  def getGoodsVoByGoodsId(goodsId: Long) = {
     sql"""
               select g.*,mg.seckill_price, mg.stock_count,mg.start_date, mg.end_date from seckill_goods mg
-              left join goods g on mg.goods_id = g.id where g.id = ${goodsId}
+              left join goods g on mg.goods_id = g.id where g.id = $goodsId
           """.map {
       goods =>
         val g = Goods(goods.longOpt(1), goods.string(2), goods.string(3),
@@ -55,7 +55,7 @@ trait GoodsDao {
   /**
    * 库存减1
    */
-  def reduceStock (g: SeckillGoods) = {
+  def reduceStock(g: SeckillGoods) = {
     sql"""
               update seckill_goods set stock_count = stock_count - 1 where goods_id = ${g.goodsId} and stock_count > 0
           """.update()
@@ -64,7 +64,7 @@ trait GoodsDao {
   /**
    * 库存修改
    */
-  def resetStock (g: SeckillGoods) = {
+  def resetStock(g: SeckillGoods) = {
     sql"""
               update seckill_goods set stock_count = ${g.stockCount} where goods_id = ${g.goodsId}
           """.update()

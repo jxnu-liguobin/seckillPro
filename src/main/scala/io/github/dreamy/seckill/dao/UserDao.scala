@@ -15,7 +15,7 @@ trait UserDao {
   /**
    * 根据用户id，查询用户
    */
-  def getById (id: Long) = {
+  def getById(id: Long) = {
     sql"""
               select * from user where id = ${id}
           """.map {
@@ -26,9 +26,9 @@ trait UserDao {
   /**
    * 新增用户
    */
-  def insert (id: Int, name: String) = {
+  def insert(id: Int, name: String) = {
     sql"""
-               insert into user(id,name) values(${id},${name})
+               insert into user(id,name) values($id, $name)
           """.update()
   }
 }

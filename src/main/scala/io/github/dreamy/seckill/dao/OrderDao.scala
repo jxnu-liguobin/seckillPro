@@ -19,7 +19,7 @@ trait OrderDao {
    */
   def getSeckillOrderByUserIdGoodsId(userId: Long, goodsId: Long) = {
     sql"""
-              select * from seckill_order where user_id=${userId} and goods_id=${goodsId}
+              select * from seckill_order where user_id=$userId and goods_id=$goodsId
           """.map { so =>
       SeckillOrder(so.longOpt("id"), so.longOpt("user_id"),
         so.longOpt("order_id"), so.longOpt("goods_id"))
@@ -30,11 +30,10 @@ trait OrderDao {
    * 订单插入成功，并返回主键
    */
   def insert(orderInfo: OrderInfo) = {
-    val long = orderInfo.createDate.toLong
     sql"""
               insert into order_info(user_id, goods_id,delivery_addr_id, goods_name, goods_count, goods_price, order_channel, status, create_date)
               values (${orderInfo.userId}, ${orderInfo.goodsId}, ${orderInfo.deliveryAddrId}, ${orderInfo.goodsName}, ${orderInfo.goodsCount}, ${orderInfo.goodsPrice},
-          ${orderInfo.orderChannel},${orderInfo.status},${long} )
+          ${orderInfo.orderChannel}, ${orderInfo.status}, ${orderInfo.createDate.toLong} )
               """.updateAndReturnGeneratedKey("id")
   }
 
@@ -53,10 +52,10 @@ trait OrderDao {
    */
   def getOrderById(orderId: Long) = {
     sql"""
-              select * from order_info where id = ${orderId}
+              select * from order_info where id = $orderId
           """.map {
       o =>
-        val c = (o.longOpt("create_date")).toLocalDateTimeOpt
+        val c = o.longOpt("create_date").toLocalDateTimeOpt
         val p = o.longOpt("pay_date").toLocalDateTimeOpt
         val order = entity.OrderInfo(o.longOpt("id"), o.longOpt("user_id"), o.longOpt("goods_id"),
           o.longOpt("delivery_addr_id"), o.string("goods_name"), o.int("goods_count"),
