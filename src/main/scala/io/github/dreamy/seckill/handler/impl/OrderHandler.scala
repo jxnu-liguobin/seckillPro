@@ -4,6 +4,7 @@ import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.http.DefaultRestfulHandler
 import io.github.dreamy.seckill.presenter.{ CodeMsg, OrderDetailPresenter }
 import io.github.dreamy.seckill.service.{ GoodsService, OrderService, SeckillUserService }
+import io.github.dreamy.seckill.util.HandlerUtils._
 import io.github.dreamy.seckill.util.{ ConditionUtils, VerifyEmpty }
 import io.undertow.server.HttpServerExchange
 import io.undertow.util.Methods

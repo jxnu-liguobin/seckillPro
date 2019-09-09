@@ -3,6 +3,7 @@ package io.github.dreamy.seckill.handler.impl
 import io.github.dreamy.seckill.http.DefaultRestfulHandler
 import io.github.dreamy.seckill.presenter.{ LoginVo, SeckillUserPresenter }
 import io.github.dreamy.seckill.service.SeckillUserService
+import io.github.dreamy.seckill.util.HandlerUtils._
 import io.github.dreamy.seckill.util.VerifyEmpty
 import io.undertow.server.HttpServerExchange
 import io.undertow.util.Methods
