@@ -33,7 +33,6 @@ object RateLimitClient extends LazyLogging {
         val key = exchange.getRequestURI + "_" + user.id.get
         val ak = AccessKey.withExpire(rateLimit.seconds)
         val count = RedisService.get(ak, key, classOf[Integer]).toInt
-        //TODO setex key没有过期
         if (count == 0) {
           logger.info(s"new user id is: ${user.id.get}")
           RedisService.set(ak, key, 1)
