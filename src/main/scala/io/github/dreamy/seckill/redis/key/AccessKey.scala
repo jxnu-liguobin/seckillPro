@@ -13,7 +13,7 @@ class AccessKey private(expireSe: Int, var prefix: String) extends BasePrefix(ex
 
 object AccessKey {
 
-  def withExpire(expireSeconds: Integer): AccessKey = {
+  def withExpire(expireSeconds: Int): AccessKey = {
     new AccessKey(expireSeconds, "access")
   }
 }

@@ -21,8 +21,7 @@ class DefaultExceptionHandler extends ExceptionHandler {
 
   private[this] lazy val contentType = "application/json;charset=utf-8"
 
-  override def handleException (exchange: HttpServerExchange, cause: Throwable): Unit = {
-    logger.error(s"found exception cause: ${cause.getMessage}")
+  override def handleException(exchange: HttpServerExchange, cause: Throwable): Unit = {
     cause match {
       case ge: GlobalException =>
         exchange.getResponseHeaders.put(Headers.CONTENT_TYPE, contentType)
@@ -44,5 +43,5 @@ class DefaultExceptionHandler extends ExceptionHandler {
 }
 
 object DefaultExceptionHandler {
-  def apply (): DefaultExceptionHandler = new DefaultExceptionHandler()
+  def apply(): DefaultExceptionHandler = new DefaultExceptionHandler()
 }

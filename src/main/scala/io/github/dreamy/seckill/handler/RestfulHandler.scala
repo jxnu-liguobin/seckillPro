@@ -5,6 +5,11 @@ import java.util.concurrent.{ Executor, Executors }
 
 import com.typesafe.scalalogging.LazyLogging
 import io.github.dreamy.seckill.concurrent.Executable
+import io.github.dreamy.seckill.exception.GlobalException
+import io.github.dreamy.seckill.limit.{ RateLimit, RateLimitClient }
+import io.github.dreamy.seckill.presenter.CodeMsg
+import io.github.dreamy.seckill.service.SeckillUserService
+import io.github.dreamy.seckill.util.HandlerUtils.getCookieValueByName
 import io.github.dreamy.seckill.util.PerformanceRecord
 import io.undertow.security.api.AuthenticationMechanism.AuthenticationMechanismOutcome
 import io.undertow.server.{ HttpHandler, HttpServerExchange }
@@ -40,36 +45,45 @@ trait RestfulHandler extends HttpHandler with PerformanceRecord with Executable 
         logger.error(t.getLocalizedMessage, t)
       }
       executeSafely(
-        authenticate(exchange).map {
-          case AuthenticationMechanismOutcome.AUTHENTICATED =>
-            executeSafely({
-              val future = exchange.getRequestMethod match {
-                //调用子类的实现
-                case GET => get(exchange)
-                case PUT => put(exchange)
-                case POST => post(exchange)
-                case PATCH => patch(exchange)
-                case DELETE => delete(exchange)
-              }
-              future.map {
-                case () | _: BoxedUnit =>
-                  exchange.setStatusCode(StatusCodes.NO_CONTENT)
+        //限流
+        limit(exchange).map {
+          case true =>
+            executeSafely(
+              //授权
+              authenticate(exchange).map {
+                case AuthenticationMechanismOutcome.AUTHENTICATED =>
+                  executeSafely({
+                    //处理http
+                    val future = exchange.getRequestMethod match {
+                      //调用子类的实现
+                      case GET => get(exchange)
+                      case PUT => put(exchange)
+                      case POST => post(exchange)
+                      case PATCH => patch(exchange)
+                      case DELETE => delete(exchange)
+                    }
+                    future.map {
+                      case () | _: BoxedUnit =>
+                        exchange.setStatusCode(StatusCodes.NO_CONTENT)
+                        exchange.endExchange()
+                      case result =>
+                        exchange.getResponseHeaders.put(Headers.CONTENT_TYPE, contentType)
+                        exchange.setStatusCode(getResponseStatusCode(exchange))
+                        exchange.getResponseSender.send(ByteBuffer.wrap(writeAsBytes(result)))
+                    }
+                  }, exceptionCaught)
+                case outcome: AuthenticationMechanismOutcome =>
+                  val (status, bytes) = authenticateFailureResponse(exchange, outcome)
+                  exchange.setStatusCode(status)
+                  if (bytes.nonEmpty) {
+                    exchange.getResponseHeaders.put(Headers.CONTENT_TYPE, contentType)
+                    exchange.getResponseSender.send(ByteBuffer.wrap(bytes))
+                  }
                   exchange.endExchange()
-                case result =>
-                  exchange.getResponseHeaders.put(Headers.CONTENT_TYPE, contentType)
-                  exchange.setStatusCode(getResponseStatusCode(exchange))
-                  exchange.getResponseSender.send(ByteBuffer.wrap(writeAsBytes(result)))
-              }
-            }, exceptionCaught)
-          case outcome: AuthenticationMechanismOutcome =>
-            val (status, bytes) = authenticateFailureResponse(exchange, outcome)
-            exchange.setStatusCode(status)
-            if (bytes.nonEmpty) {
-              exchange.getResponseHeaders.put(Headers.CONTENT_TYPE, contentType)
-              exchange.getResponseSender.send(ByteBuffer.wrap(bytes))
-            }
-            exchange.endExchange()
-        }, exceptionCaught)
+              }, exceptionCaught)
+          case false => throw GlobalException(CodeMsg.ACCESS_LIMIT_REACHED)
+        }, exceptionCaught
+      )
     })
   }
 
@@ -97,6 +111,13 @@ trait RestfulHandler extends HttpHandler with PerformanceRecord with Executable 
   def authenticate(exchange: HttpServerExchange): Future[AuthenticationMechanismOutcome] = {
     Future.successful(AuthenticationMechanismOutcome.AUTHENTICATED)
   }
+
+  private def limit(exchange: HttpServerExchange) = {
+    val token = getCookieValueByName(exchange, SeckillUserService.COOKI_NAME_TOKEN)
+    Future.successful(RateLimitClient.seckillLimit(rateLimit.copy(token = Option(token)), exchange))
+  }
+
+  def rateLimit: RateLimit = ???
 
   def get(exchange: HttpServerExchange): Future[Any] = Future.failed(new UnsupportedOperationException)
 

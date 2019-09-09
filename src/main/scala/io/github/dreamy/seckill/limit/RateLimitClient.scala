@@ -1,8 +1,6 @@
 package io.github.dreamy.seckill.limit
 
 import com.typesafe.scalalogging.LazyLogging
-import io.github.dreamy.seckill.exception.GlobalException
-import io.github.dreamy.seckill.presenter.CodeMsg
 import io.github.dreamy.seckill.redis.RedisService
 import io.github.dreamy.seckill.redis.key.AccessKey
 import io.github.dreamy.seckill.util.HandlerUtils
@@ -24,26 +22,27 @@ object RateLimitClient extends LazyLogging {
    *
    * @param rateLimit
    * @param exchange
-   * @return 是否通过限流控制
+   * @return 限流 false为限制,true为通过
    */
   def seckillLimit(rateLimit: RateLimit, exchange: HttpServerExchange) = {
     //需要登录
     if (rateLimit.needLogin) {
-      val user = HandlerUtils.isLogin(exchange, rateLimit.token)
+      val user = HandlerUtils.isLogin(exchange, rateLimit.token.get)
       if (user == null) false else {
         //TODO 是否应当并发控制？
-        val key = exchange.getRequestURI + "_" + user.id
+        val key = exchange.getRequestURI + "_" + user.id.get
         val ak = AccessKey.withExpire(rateLimit.seconds)
         val count = RedisService.get(ak, key, classOf[Integer]).toInt
-        if (count == null) {
-          logger.info(s"new user id is: ${user.id}")
+        //TODO setex key没有过期
+        if (count == 0) {
+          logger.info(s"new user id is: ${user.id.get}")
           RedisService.set(ak, key, 1)
         } else if (count < rateLimit.maxCount) {
-          logger.info(s"old user id is: ${user.id}")
+          logger.info(s"old user id is: ${user.id.get}")
           RedisService.incr(ak, key)
           true
-        } else throw GlobalException(CodeMsg.ACCESS_LIMIT_REACHED)
+        } else false
       }
-    } else true
+    } else false
   }
 }
