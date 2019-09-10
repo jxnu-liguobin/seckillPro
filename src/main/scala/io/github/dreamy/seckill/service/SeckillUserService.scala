@@ -1,5 +1,6 @@
 package io.github.dreamy.seckill.service
 
+import io.github.dreamy.seckill.config.Constant
 import io.github.dreamy.seckill.dao.SeckillUserDao
 import io.github.dreamy.seckill.database.RepositorySupport
 import io.github.dreamy.seckill.entity.SeckillUser
@@ -83,7 +84,7 @@ trait SeckillUserServiceComponent extends RepositorySupport {
   def addCookie(exchange: HttpServerExchange, token: String, user: SeckillUser) = {
     //TODO 这里存在用户
     RedisService.set(SeckillUserKey.token, token, user)
-    val cookie = new CookieImpl(SeckillUserService.COOKI_NAME_TOKEN, token)
+    val cookie = new CookieImpl(Constant.cookie_name_token, token)
     //TODO 成功设置到浏览器
     cookie.setMaxAge(60 * 60 * 24 * 7)
     cookie.setPath("/")
@@ -135,8 +136,4 @@ trait SeckillUserServiceComponent extends RepositorySupport {
   }
 }
 
-object SeckillUserService extends SeckillUserService {
-
-  final val COOKI_NAME_TOKEN = "token"
-
-}
+object SeckillUserService extends SeckillUserService

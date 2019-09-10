@@ -1,9 +1,10 @@
 package io.github.dreamy.seckill.handler.impl
 
+import io.github.dreamy.seckill.config.Constant
 import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.http.DefaultRestfulHandler
 import io.github.dreamy.seckill.presenter.{ CodeMsg, OrderDetailPresenter }
-import io.github.dreamy.seckill.service.{ GoodsService, OrderService, SeckillUserService }
+import io.github.dreamy.seckill.service.{ GoodsService, OrderService }
 import io.github.dreamy.seckill.util.HandlerUtils._
 import io.github.dreamy.seckill.util.{ ConditionUtils, VerifyEmpty }
 import io.undertow.server.HttpServerExchange
@@ -26,7 +27,7 @@ class OrderHandler extends DefaultRestfulHandler {
   override def methods: Set[String] = single(Methods.GET_STRING)
 
   override def get(exchange: HttpServerExchange): Future[Any] = {
-    val token = getCookieValueByName(exchange, SeckillUserService.COOKI_NAME_TOKEN)
+    val token = getCookieValueByName(exchange, Constant.cookie_name_token)
     val user = isLogin(exchange, token)
     if (VerifyEmpty.noEmpty(user)) {
       val orderId = getQueryParamValue(exchange, "orderId").getOrElse("-1").toLong

@@ -1,6 +1,7 @@
 package io.github.service.test
 
 import io.github.BaseTest
+import io.github.dreamy.seckill.config.Constant
 import io.github.dreamy.seckill.service.SeckillUserService
 
 import scala.concurrent.Await
@@ -23,7 +24,7 @@ object SeckillUserServiceTest extends BaseTest with App {
   }
 
   def test_updatePassword(): Unit = {
-    val u = Await.result(SeckillUserService.updatePasswordById(SeckillUserService.COOKI_NAME_TOKEN, mockUserId, "123456"), Duration.Inf)
+    val u = Await.result(SeckillUserService.updatePasswordById(Constant.cookie_name_token, mockUserId, "123456"), Duration.Inf)
     println(u)
   }
 

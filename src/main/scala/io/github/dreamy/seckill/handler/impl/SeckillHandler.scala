@@ -1,12 +1,13 @@
 package io.github.dreamy.seckill.handler.impl
 
+import io.github.dreamy.seckill.config.Constant
 import io.github.dreamy.seckill.disruptor.SeckillMessageQueueServer
 import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.http.DefaultRestfulHandler
 import io.github.dreamy.seckill.presenter.CodeMsg
 import io.github.dreamy.seckill.redis.key.{ GoodsKey, OrderKey, SeckillKey }
 import io.github.dreamy.seckill.redis.{ RedisService, StockCountInitialization }
-import io.github.dreamy.seckill.service.{ GoodsService, OrderService, SeckillService, SeckillUserService }
+import io.github.dreamy.seckill.service.{ GoodsService, OrderService, SeckillService }
 import io.github.dreamy.seckill.util.HandlerUtils._
 import io.github.dreamy.seckill.util.{ ConditionUtils, VerifyEmpty, VerifyImage }
 import io.undertow.server.HttpServerExchange
@@ -37,7 +38,7 @@ class SeckillHandler extends DefaultRestfulHandler {
 
   override def get(exchange: HttpServerExchange): Future[Any] = {
     //TODO 获取用户和token迁出handler，使用独立的授权方法
-    val token = getCookieValueByName(exchange, SeckillUserService.COOKI_NAME_TOKEN)
+    val token = getCookieValueByName(exchange, Constant.cookie_name_token)
     val user = isLogin(exchange, token)
     if (VerifyEmpty.noEmpty(user)) {
       val goodsId = getQueryParamValue(exchange, "goodsId").getOrElse("-1").toLong
@@ -74,7 +75,7 @@ class SeckillHandler extends DefaultRestfulHandler {
   }
 
   override def post(exchange: HttpServerExchange): Future[Any] = {
-    val token = getCookieValueByName(exchange, SeckillUserService.COOKI_NAME_TOKEN)
+    val token = getCookieValueByName(exchange, Constant.cookie_name_token)
     val user = isLogin(exchange, token)
     val goodsId = getQueryParamValue(exchange, "goodsId").getOrElse("-1").toLong
     val path = getQueryParamValue(exchange, "path").getOrElse("invalid path")

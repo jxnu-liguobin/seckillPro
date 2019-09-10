@@ -5,10 +5,10 @@ import java.util.concurrent.{ Executor, Executors }
 
 import com.typesafe.scalalogging.LazyLogging
 import io.github.dreamy.seckill.concurrent.Executable
+import io.github.dreamy.seckill.config.Constant
 import io.github.dreamy.seckill.exception.GlobalException
 import io.github.dreamy.seckill.limit.{ RateLimit, RateLimitClient }
 import io.github.dreamy.seckill.presenter.CodeMsg
-import io.github.dreamy.seckill.service.SeckillUserService
 import io.github.dreamy.seckill.util.HandlerUtils.getCookieValueByName
 import io.github.dreamy.seckill.util.PerformanceRecord
 import io.undertow.security.api.AuthenticationMechanism.AuthenticationMechanismOutcome
@@ -113,7 +113,7 @@ trait RestfulHandler extends HttpHandler with PerformanceRecord with Executable 
   }
 
   private def limit(exchange: HttpServerExchange) = {
-    val token = getCookieValueByName(exchange, SeckillUserService.COOKI_NAME_TOKEN)
+    val token = getCookieValueByName(exchange, Constant.cookie_name_token)
     Future.successful(RateLimitClient.seckillLimit(rateLimit.copy(token = Option(token)), exchange))
   }
 

@@ -1,5 +1,6 @@
 package io.github.dreamy.seckill.handler.impl
 
+import io.github.dreamy.seckill.config.Constant
 import io.github.dreamy.seckill.http.DefaultRestfulHandler
 import io.github.dreamy.seckill.presenter.{ LoginVo, SeckillUserPresenter }
 import io.github.dreamy.seckill.service.SeckillUserService
@@ -44,7 +45,7 @@ class LoginHandler extends DefaultRestfulHandler {
     //redis token 30天，cookie token 7天，cookie JSESSIONID 30分钟，session 30分钟
     //登录成功会刷新cookie中的JSESSIONID、token和redis中的token的过期时间，其中JSESSIONID与session过期时间一致
     //当cookie中的token还没有过期，但是session的cookie过期了，则会查redis，若redis的过期了但是token却没有过期，则认为是错误的token
-    val token = getCookieValueByName(exchange, SeckillUserService.COOKI_NAME_TOKEN)
+    val token = getCookieValueByName(exchange, Constant.cookie_name_token)
     //携带cookie的请求会校验token是否有效，有效的获取到用户信息，并刷新session中的token-user，反回token（反回token只是用于测试）
     val user = isLogin(exchange, token)
     if (VerifyEmpty.noEmpty(user)) {

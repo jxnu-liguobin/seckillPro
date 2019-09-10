@@ -29,7 +29,7 @@ object RateLimitClient extends LazyLogging {
     if (rateLimit.needLogin) {
       val user = HandlerUtils.isLogin(exchange, rateLimit.token.get)
       if (user == null) false else {
-        //TODO 是否应当并发控制？
+        //TODO 是否应当并发控制？,此处set已经是原子性操作redis
         val key = exchange.getRequestURI + "_" + user.id.get
         val ak = AccessKey.withExpire(rateLimit.seconds)
         val count = RedisService.get(ak, key, classOf[Integer]).toInt
