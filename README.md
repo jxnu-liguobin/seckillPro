@@ -67,10 +67,11 @@ Others Version
 6. 好看的页面
 7. 单测覆盖与重构
 8. 接口压力测试
-9. 其他设计及优化
-10. 超时重试
-11. 错误降级处理
-12. 支持Zookeeper（未试过Scala是否可行，可能Consul）、Kafka、Akka stream
+9. 超时重试
+10. 错误降级处理
+11. 支持Zookeeper（未试过Scala是否可行，可能Consul）、Kafka、Akka stream
+12. 其他设计及优化
+13. 技术分析博客
 
 ### 思考改进
 
