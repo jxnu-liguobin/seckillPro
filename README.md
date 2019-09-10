@@ -60,12 +60,17 @@ Others Version
 ## TODO
 
 1. 接口级限流
-2. 支持异步链路追踪
+2. 异步链路追踪
 3. 乐观锁
 4. Redis分布式锁
 5. 分布式Session
-6. 支持Zookeeper（未试过Scala是否可行，可能Consul）、Kafka、Akka stream
-7. 页面（不会写。。）
+6. 好看的页面
+7. 单测覆盖与重构
+8. 接口压力测试
+9. 其他设计及优化
+10. 超时重试
+11. 错误降级处理
+12. 支持Zookeeper（未试过Scala是否可行，可能Consul）、Kafka、Akka stream
 
 ### 思考改进
 
