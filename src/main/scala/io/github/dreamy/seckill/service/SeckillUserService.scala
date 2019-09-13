@@ -88,7 +88,6 @@ trait SeckillUserServiceComponent extends RepositorySupport {
     //TODO 成功设置到浏览器
     cookie.setMaxAge(60 * 60 * 24 * 7)
     cookie.setPath("/")
-    //TODO 未验证是否需要在service层返回HttpServerExchange对象
     exchange.setResponseCookie(cookie)
   }
 
