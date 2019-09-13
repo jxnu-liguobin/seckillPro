@@ -9,7 +9,7 @@ import io.undertow.server.HttpServerExchange
 /**
  * redis 限流
  *
- * @see 基于分布式redlock的令牌桶限流 https://github.com/jxnu-liguobin/distributed-implement-scala
+ * @see 其他限流后续补充到 https://github.com/jxnu-liguobin/distributed-implement-scala
  * @author 梦境迷离
  * @since 2019-09-09
  * @version v1.0
