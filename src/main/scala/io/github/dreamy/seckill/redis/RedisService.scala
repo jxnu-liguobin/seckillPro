@@ -11,6 +11,7 @@ import scala.collection.mutable.ArrayBuffer
 
 /**
  * redis服务
+ * TODO 替换为 rediscala 异步非阻塞
  *
  * @author 梦境迷离
  * @since 2019-08-05
