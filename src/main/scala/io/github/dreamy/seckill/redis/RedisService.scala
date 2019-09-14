@@ -23,15 +23,37 @@ object RedisService extends LazyLogging {
 
   private val gs = GsonSerializerAdapter.getGson
 
-  def get[T](prefix: KeyPrefix, key: String, clazz: Class[T]): T = {
-    try {
-      ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
-        // 生成真正的key
-        val realKey = prefix.getPrefix() + key
-        val str = jedis.get(realKey)
-        logger.info(s"get real key:$realKey")
-        RedisService.stringToBean(str, clazz)
+  //redis分布式锁
+  def getAndSet(prefix: KeyPrefix, key: String, value: String) = {
+    ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
+      val realKey = prefix.getPrefix() + key
+      jedis.getSet(realKey, value)
+    }
+  }
+
+  //redis分布式锁
+  //如果因为客户端失败、崩溃或其他原因导致没有办法释放锁的话，怎么办？锁无法释放
+  def setIfAbsent(prefix: KeyPrefix, key: String, value: String) = {
+    ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
+      val realKey = prefix.getPrefix() + key
+      val seconds = prefix.expireSeconds()
+      //为防止解锁失败时导致死锁，先这样处理
+      synchronized {
+        if (jedis.setnx(realKey, value) > 0) {
+          jedis.expire(realKey, seconds)
+          true
+        } else false
       }
+    }
+  }
+
+  def get[T](prefix: KeyPrefix, key: String, clazz: Class[T]): T = {
+    ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
+      // 生成真正的key
+      val realKey = prefix.getPrefix() + key
+      val str = jedis.get(realKey)
+      logger.info(s"get real key:$realKey")
+      RedisService.stringToBean(str, clazz)
     }
   }
 
@@ -50,10 +72,8 @@ object RedisService extends LazyLogging {
       val seconds = prefix.expireSeconds()
       ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
         logger.info(s"set real key:$realKey")
-        if (seconds <= 0)
-          jedis.set(realKey, str)
-        else
-          jedis.setex(realKey, seconds, str)
+        if (seconds <= 0) jedis.set(realKey, str)
+        else jedis.setex(realKey, seconds, str)
         true
       }
     }
@@ -114,12 +134,9 @@ object RedisService extends LazyLogging {
     val keys: util.List[String] = scanKeys(prefix.getPrefix())
     val keyss = new ArrayBuffer[String]()
     keys.forEach(k => keyss.+=:(k))
-    if (prefix == null) {
-      false
-    }
-    else if (keys == null || keys.size() <= 0) {
-      true
-    } else {
+    if (prefix == null) false
+    else if (keys == null || keys.size() <= 0) true
+    else {
       ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
         jedis.del(keyss: _*)
         logger.info(s"delete key prefix:$prefix")
@@ -158,15 +175,10 @@ object RedisService extends LazyLogging {
   def beanToString[T](value: T): String = {
     if (value == null) null else {
       val clazz: Class[_ <: T] = value.getClass
-      if (clazz == classOf[Int] || clazz == classOf[Integer]) {
-        "" + value
-      } else if (clazz == classOf[String]) {
-        value.asInstanceOf[String]
-      } else if (clazz == classOf[Long] || clazz == classOf[Long]) {
-        "" + value
-      } else {
-        gs.toJson(value)
-      }
+      if (clazz == classOf[Int] || clazz == classOf[Integer]) "" + value
+      else if (clazz == classOf[String]) value.asInstanceOf[String]
+      else if (clazz == classOf[Long] || clazz == classOf[Long]) "" + value
+      else gs.toJson(value)
     }
   }
 
@@ -177,18 +189,11 @@ object RedisService extends LazyLogging {
     /**
      * Scala基本类型就是包装类型,可以说没有原生类型一说
      */
-    if (VerifyEmpty.empty(str) || clazz == null) {
-      return null.asInstanceOf[T]
-    }
-    if (clazz == classOf[Int] || clazz == classOf[Integer]) {
-      str.toInt.asInstanceOf[T]
-    } else if (clazz == classOf[String]) {
-      str.asInstanceOf[T]
-    } else if (clazz == classOf[Long] || clazz == classOf[Long]) {
-      str.toLong.asInstanceOf[T]
-    } else {
-      gs.fromJson(str, clazz)
-    }
+    if (VerifyEmpty.empty(str) || clazz == null) return null.asInstanceOf[T]
+    if (clazz == classOf[Int] || clazz == classOf[Integer]) str.toInt.asInstanceOf[T]
+    else if (clazz == classOf[String]) str.asInstanceOf[T]
+    else if (clazz == classOf[Long] || clazz == classOf[Long]) str.toLong.asInstanceOf[T]
+    else gs.fromJson(str, clazz)
   }
 }
 

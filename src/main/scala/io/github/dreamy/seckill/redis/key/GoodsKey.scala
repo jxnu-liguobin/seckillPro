@@ -9,7 +9,7 @@ import io.github.dreamy.seckill.redis.BasePrefix
  * @since 2019年8月5日
  * @version v2.0
  */
-class GoodsKey private(expireSe: Integer, var prefix: String) extends BasePrefix(expireSe, prefix)
+class GoodsKey private(expireSe: Int, var prefix: String) extends BasePrefix(expireSe, prefix)
 
 object GoodsKey {
 
