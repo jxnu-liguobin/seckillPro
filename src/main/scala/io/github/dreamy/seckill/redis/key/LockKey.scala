@@ -9,11 +9,11 @@ import io.github.dreamy.seckill.redis.BasePrefix
  * @since 2019-09-14
  * @version v1.0
  */
-class LockKey private(expireSe: Int, var prefix: String) extends BasePrefix(expireSe, prefix)
+class LockKey private(var prefix: String) extends BasePrefix(prefix)
 
 object LockKey {
 
-  //分布式锁过期时间5分钟
-  final val getSingleRedisLock = new LockKey(60 * 5, "redisLock")
+  //分布式锁过期时间是由用户设置的
+  final val getSingleRedisLock = new LockKey("lock")
 
 }

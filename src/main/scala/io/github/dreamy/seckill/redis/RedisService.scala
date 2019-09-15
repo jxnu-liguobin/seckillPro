@@ -24,7 +24,8 @@ object RedisService extends LazyLogging {
   private val gs = GsonSerializerAdapter.getGson
 
   //redis分布式锁
-  def getAndSet(prefix: KeyPrefix, key: String, value: String) = {
+  def getAndSet(prefix: KeyPrefix, key: String, current: Long, expire: Long) = {
+    val value = (current + expire).toString
     ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
       val realKey = prefix.getPrefix() + key
       jedis.getSet(realKey, value)
@@ -33,15 +34,15 @@ object RedisService extends LazyLogging {
 
   //redis分布式锁
   //如果因为客户端失败、崩溃或其他原因导致没有办法释放锁的话，怎么办？锁无法释放
-  def setIfAbsent(prefix: KeyPrefix, key: String, value: String) = {
+  def setIfAbsent(prefix: KeyPrefix, key: String, current: Long, expire: Long) = {
+    val value = (current + expire).toString
     ResourceUtils.using(jedisPool.getResource) { jedis: Jedis =>
       val realKey = prefix.getPrefix() + key
-      val seconds = prefix.expireSeconds()
       //为防止解锁失败时导致死锁，先这样处理
       synchronized {
         if (jedis.setnx(realKey, value) > 0) {
-          jedis.expire(realKey, seconds)
-          true
+          if (jedis.pexpireAt(realKey, current + expire) > 0)
+            true else false
         } else false
       }
     }

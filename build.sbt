@@ -28,3 +28,5 @@ libraryDependencies ++= Seq(
   "io.undertow" % "undertow-core" % "2.0.24.Final",
   "com.google.inject" % "guice" % "4.2.2",
 )
+
+sources in(Compile, doc) := Seq.empty
